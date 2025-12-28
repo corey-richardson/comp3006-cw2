@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
-const Comment = require("..//models/commentModel");
+const Comment = require("../models/commentModel");
 const Post = require("../models/postModel");
 
 const getComments = async (request, response) => {
     const { postId } = request.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
         return response.status(400).json({error: "Invalid Post ID format."});
     }
 
@@ -34,7 +34,7 @@ const createComment = async (request, response) => {
             post_id, author_id, body
         });
 
-        const io = request.app.io("socketio");
+        const io = request.app.get("socketio");
         io.emit("new_comment", comment);
 
         response.status(201).json(comment);
@@ -55,8 +55,8 @@ const deleteComment = async (request, response) => {
         return response.status(404).json({error: "Comment not found."});
     }
 
-    const io = request.app.io("socketio");
-    io.emit("deleted_comment", id);
+    const io = request.app.get("socketio");
+    io.emit("deleted_comment", commentId);
 
     response.status(204);
 }
@@ -68,7 +68,7 @@ const updateComment = async (request, response) => {
         return response.status(400).json({error: "Invalid ID format."});
     }
 
-    const comment = await Post.findByIdAndUpdate(commentId, { ...request.body });
+    const comment = await Comment.findByIdAndUpdate(commentId, { ...request.body });
     if (!comment) {
         return response.status(404).json({error: "Comment not found."});
     }

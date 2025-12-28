@@ -32,7 +32,7 @@ const getUsersPosts = async (request, response) => {
             return response.status(404).json({error: "User not found."});
         }
 
-        const posts = Post.find({ author_id: user._id })
+        const posts = await Post.find({ author_id: user._id })
             .populate("author_id", "username firstName lastName")
             .sort({ createdAt: -1 });
         
@@ -44,20 +44,20 @@ const getUsersPosts = async (request, response) => {
 
 
 const createPost = async (request, response) => {
-    const { user, body } = request.body;
+    const { author_id, body } = request.body;
 
     let emptyFields = [];
-    if (!user) emptyFields.push("user");
+    if (!author_id) emptyFields.push("author_id");
     if (!body) emptyFields.push("body");
     if (emptyFields.length > 0)
         return response.status(400).json({ error: "Please fill in all fields.", emptyFields });
 
     try {
         const post = await Post.create({
-            user, body
+            author_id, body
         });
 
-        const io = request.app.io("socketio");
+        const io = request.app.get("socketio");
         io.emit("new_post", post);
 
         response.status(201).json(post);
@@ -79,10 +79,10 @@ const deletePost = async (request, response) => {
         return response.status(404).json({error: "Post not found."});
     }
 
-    const io = request.app.io("socketio");
+    const io = request.app.get("socketio");
     io.emit("deleted_post", id);
 
-    response.status(204);
+    response.status(200).json(post);
 }
 
 
