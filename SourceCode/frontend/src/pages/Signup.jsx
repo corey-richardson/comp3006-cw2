@@ -1,6 +1,8 @@
 import { useState } from "react";
 import useSignup from "../hooks/useSignup";
 
+import styles from "../styles/AuthForms.module.css";
+
 const Signup = () => {
 
     const [ email, setEmail ] = useState("");
@@ -18,12 +20,12 @@ const Signup = () => {
     };
 
     return ( 
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className={styles.authContainer}>
+            <form className={styles.authForm} onSubmit={handleSubmit}>
                 <h3>Sign Up</h3>
 
                 <label>Name:</label>
-                <div>
+                <div className={styles.flexContainer}>
                     <input 
                         type="text" 
                         name="firstName" id="firstName"
@@ -76,7 +78,7 @@ const Signup = () => {
                     required
                 />
 
-                <button disabled={isLoading} type="submit">
+                <button className={styles.authButton} disabled={isLoading} type="submit">
                     { isLoading ? "Signing up..." : "Sign up" }
                 </button>
 
