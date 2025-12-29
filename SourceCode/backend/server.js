@@ -27,6 +27,16 @@ app.use((request, response, next) => {
     next();
 });
 
+// Smoke Test Route
+app.get("/api/smoke-test", (request, response) => {
+    // mongoose.disconnect();
+    const dbStatus = mongoose.connection.readyState === 1 ? "Connected" : "Disconnected";
+    response.json({
+        express: "Online!",
+        database: dbStatus
+    });
+});
+
 // Routes
 app.use("/api/posts/:postId/comments", commentRoutes);
 app.use("/api/posts", postRoutes);
@@ -37,8 +47,8 @@ app.use("/api/users", userRoutes);
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         // Listen for requests, only AFTER database connection established
-        app.listen(process.env.PORT, () => {
-            console.log("Connected to database and listening on Port 4000!")
+        server.listen(process.env.PORT, () => {
+            console.log(`Connected to database and listening on Port ${process.env.PORT}!`)
         });
     })
     .catch((error) => {
