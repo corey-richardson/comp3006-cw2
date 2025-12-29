@@ -2,8 +2,9 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-
 const http = require("http");
+const cors = require("cors");
+
 const { Server } = require("socket.io");
 
 const commentRoutes = require("./routes/comments");
@@ -17,6 +18,10 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: { origin: "*" }
 });
+
+app.use(cors({
+    origin: "http://localhost:81"
+}));
 
 // Middleware
 app.use(express.json())

@@ -19,7 +19,7 @@ const Navbar = () => {
                     ) : (
                         <div className={styles.navLinks}>
                             <Link to="/login">Login</Link>
-                            <Link to="/login">Signup</Link>
+                            <Link to="/signup">Signup</Link>
                         </div>
                     )}
                 </nav>

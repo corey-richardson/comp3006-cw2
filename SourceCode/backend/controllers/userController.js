@@ -27,6 +27,8 @@ const signupUser = async (request, response) => {
 
         if (!validator.isEmail(email))
             return response.status(400).json({ error: "Invalid Email Address." });
+        if (!validator.isSlug(username))
+            return response.status(400).json({ error: "Invalid Username format." });
         if (!validator.isStrongPassword(password))
             return response.status(400).json({ error: "Password is not strong enough." });
 
