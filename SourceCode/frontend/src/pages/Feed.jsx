@@ -49,23 +49,27 @@ const Feed = () => {
                     {<Earth size={20} />} &nbsp; Global
                 </button>
 
-                <button 
-                    onClick={() => setFeedType("following")}
-                    className={clsx(styles.selectorItem, { [styles.active]: feedType === "following" })}
-                    aria-label="Following Feed"
-                    title="Explore posts from users you follow"
-                >
-                    {<UserRoundCheck size={20} />} &nbsp; Following
-                </button>
+                {user && (
+                    <>
+                        <button 
+                            onClick={() => setFeedType("following")}
+                            className={clsx(styles.selectorItem, { [styles.active]: feedType === "following" })}
+                            aria-label="Following Feed"
+                            title="Explore posts from users you follow"
+                        >
+                            {<UserRoundCheck size={20} />} &nbsp; Following
+                        </button>
 
-                <Link 
-                    to="/posts/new" 
-                    className={styles.selectorItem}
-                    aria-label="New Post"
-                    title="Create and upload a new post"
-                >
-                    {<NotebookPen size={20} />} &nbsp; New Post
-                </Link>
+                        <Link 
+                            to="/posts/new" 
+                            className={styles.selectorItem}
+                            aria-label="New Post"
+                            title="Create and upload a new post"
+                        >
+                            {<NotebookPen size={20} />} &nbsp; New Post
+                        </Link>
+                    </>
+                )}
             </nav>
 
             <div className={styles.postList}>
