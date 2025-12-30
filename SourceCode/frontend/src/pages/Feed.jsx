@@ -1,27 +1,32 @@
 import { usePosts } from "../hooks/usePosts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostCard from "../components/PostCard";
 
 const Feed = () => {
-    const { posts, hasMore, dispatch } = usePosts();
+    const { posts, hasMore, fetchPage } = usePosts();
+
     const [ page, setPage ] = useState(1);
+    const [ feedType, setFeedType ] = useState("global");
 
-    const loadMore = async () => {
+    useEffect(() => {
+        setPage(1);
+        fetchPage(1, feedType);
+    }, [feedType, fetchPage]);
+
+    const loadMore = () => {
         const nextPage = page + 1;
-
-        const baseUrl = process.env.REACT_APP_API_BASE_URL || "/api";
-        const response = await fetch(`${baseUrl}/posts?page=${nextPage}`);
-        const json = await response.json();
-
-        if (response.ok) {
-            dispatch({ type: "LOAD_MORE_POSTS", payload: json });
-            setPage(nextPage);
-        }
+        fetchPage(nextPage, feedType);
+        setPage(nextPage);        
     }
 
     return ( 
         <div className="feed">
             <h2>Feed</h2>
+
+            <nav className="feed-types-selectors">
+                <button onClick={() => setFeedType("global")}>Global</button>
+                <button onClick={() => setFeedType("following")}>Following</button>
+            </nav>
 
             <div className="posts-list">
                 { posts && posts.map((post) => (

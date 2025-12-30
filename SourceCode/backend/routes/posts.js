@@ -7,6 +7,7 @@ const {
     getPosts,
     getPost,
     getUsersPosts,
+    getFollowingPosts,
     createPost,
     deletePost,
     updatePost
@@ -20,6 +21,7 @@ router.get("/user/:username", getUsersPosts);
 // MIDDLEWARE
 router.use(requireAuth);
 // PROTECTED ROUTES
+router.get("/following", getFollowingPosts);
 router.post("/", createPost);
 router.delete("/:id", deletePost);
 router.patch("/:id", updatePost);

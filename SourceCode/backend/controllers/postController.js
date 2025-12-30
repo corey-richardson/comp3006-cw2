@@ -83,6 +83,39 @@ const getUsersPosts = async (request, response) => {
     }
 };
 
+const getFollowingPosts = async (request, response) => {
+    const page = parseInt(request.query.page) || 1;
+    const limit = parseInt(request.query.limit) || 50;
+    const skip = (page - 1) * limit;
+
+    const currentUserId = request.user_id;
+
+    try {
+        const following = await Relationship.find({
+            follower_id: currentUserId
+        }).select("following_id");
+        const followingIds = following.map(f => f.following_id);
+
+        const [ posts, totalPosts ] = await Promise.all([
+            await Post.find({ author: { $in: followingIds }})
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate("author_id", "username firstName lastName"),
+            await Post.countDocuments({ author: { $in: followingIds }})
+        ]);
+
+        response.status(200).json({
+            posts,
+            currentPage: page,
+            pages: Math.ceil(totalPosts / limit),
+            hasMore: skip + posts.length < totalPosts
+        });
+    } catch (e) {
+        response.status(500).json({ error: e.message });
+    }
+}
+
 const createPost = async (request, response) => {
     const { body } = request.body;
     const author_id = request.user._id;
@@ -168,4 +201,4 @@ const updatePost = async (request, response) => {
 };
 
 
-module.exports = { getPosts, getPost, getUsersPosts, createPost, deletePost, updatePost };
+module.exports = { getPosts, getPost, getUsersPosts, getFollowingPosts, createPost, deletePost, updatePost };

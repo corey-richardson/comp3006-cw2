@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer, useEffect, useCallback } from "react";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../hooks/useAuthContext";
 
@@ -25,24 +25,36 @@ export const postReducer = (state, action) => {
 
 export const PostContextProvider = ({ children }) => {
     const [ state, dispatch ] = useReducer(postReducer, {
-        posts: []
+        posts: [],
+        hasMore: false
     });
 
     const { user } = useAuthContext();
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            const baseUrl = process.env.REACT_APP_API_BASE_URL || "/api";
-            const response = await fetch(`${baseUrl}/posts`);
-            const json = await response.json();
+    const fetchPage = useCallback(async ( page, type ) => {
+        const baseUrl = process.env.REACT_APP_API_BASE_URL || "/api";
+        const endpoint = type === "following" ? "/posts/following" : "/posts";
 
-            if (response.ok) {
+        const response = await fetch(`${baseUrl}${endpoint}?page=${page}`, {
+            headers: {
+                "Authorization": `Bearer ${user?.token}`
+            }
+        });
+
+        const json = await response.json();
+
+        if (response.ok) {
+            if (page === 1) {
                 dispatch({ type: "SET_POSTS", payload: json });
+            } else {
+                dispatch({ type: "LOAD_MORE_POSTS", payload: json });
             }
         }
+    }, [user?.token]);
 
-        fetchPosts();
-        
+    useEffect(() => {
+        if (user === undefined) return; // Guard against initialisations
+
         const socket = io(process.env.REACT_APP_BASE_URL || "/", {
             query: { token: user?.token || null }
         });
@@ -55,7 +67,7 @@ export const PostContextProvider = ({ children }) => {
     
     
     return (
-        <PostContext.Provider value={{ ...state, dispatch }}>
+        <PostContext.Provider value={{ ...state, dispatch, fetchPage }}>
             { children }
         </PostContext.Provider>
     )
