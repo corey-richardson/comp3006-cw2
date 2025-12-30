@@ -58,7 +58,7 @@ const createPost = async (request, response) => {
         });
 
         const io = request.app.get("socketio");
-        io.emit("new_post", post);
+        io.emit("new_post", await post.populate("author", "username"));
 
         response.status(201).json(post);
     }

@@ -25,7 +25,16 @@ app.use(cors({
 
 // Middleware
 app.use(express.json());
+
 app.set("socketio", io);
+io.on("connection", (socket) => {
+    const token = socket.handshake.query.token;
+    console.log(`Client Connected: ${socket.id} | Token: ${!!token}`);
+
+    socket.on("disconnect", () => {
+        console.log("User left your channel.");
+    });
+});
 
 app.use((request, response, next) => {
     // eslint-disable-next-line no-console
@@ -37,9 +46,14 @@ app.use((request, response, next) => {
 app.get("/api/smoke-test", (request, response) => {
     // mongoose.disconnect();
     const dbStatus = mongoose.connection.readyState === 1 ? "Connected" : "Disconnected";
+
+    const authHeader = request.headers.authorization;
+    const hasToken = !!authHeader && authHeader.startsWith("Bearer ");
+
     response.json({
         express: "Online!",
-        database: dbStatus
+        database: dbStatus,
+        token: hasToken ? "Token Present" : "No Token"
     });
 });
 
