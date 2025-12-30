@@ -1,0 +1,49 @@
+.feed {
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.feedHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.feedTypeSelectors {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.selectorItem {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text-color);
+    text-decoration: none;
+    margin-bottom: -1px;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    line-height: 1;
+    box-sizing: border-box;
+}
+
+.selectorItem:hover {
+    background-color: var(--light-gray);
+}
+
+.active {
+    border-bottom: 4px solid var(--border-color) !important;
+}
+
+/* STILL NEED STYLES FOR .loadMoreButton AND .postList */
