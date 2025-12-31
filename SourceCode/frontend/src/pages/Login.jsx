@@ -15,25 +15,25 @@ const Login = () => {
         await login(email, password);
     };
 
-    return ( 
+    return (
         <div className={styles.authContainer}>
             <form className={styles.authForm} onSubmit={handleSubmit}>
                 <h3>Login</h3>
 
                 <label htmlFor="email">Email:</label>
-                <input 
-                    type="email" 
+                <input
+                    type="email"
                     name="email" id="email"
-                    onChange={(e) => { setEmail(e.target.value)}}
+                    onChange={(e) => { setEmail(e.target.value);}}
                     value={email}
                     required
                 />
 
                 <label htmlFor="password">Password:</label>
-                <input 
-                    type="password" 
+                <input
+                    type="password"
                     name="password" id="password"
-                    onChange={(e) => { setPassword(e.target.value)}}
+                    onChange={(e) => { setPassword(e.target.value);}}
                     value={password}
                     required
                 />
@@ -46,6 +46,6 @@ const Login = () => {
             </form>
         </div>
     );
-}
- 
+};
+
 export default Login;

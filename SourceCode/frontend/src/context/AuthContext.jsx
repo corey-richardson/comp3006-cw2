@@ -10,11 +10,11 @@ export const authReducer = (state, action) => {
             return { ...state, user: null };
         case "AUTH_READY":
             return { ...state, authIsReady: true };
-        
+
         default:
             return state;
     }
-}
+};
 
 export const AuthContextProvider = ({ children }) => {
     const [ state, dispatch ] = useReducer(authReducer, {
@@ -35,5 +35,5 @@ export const AuthContextProvider = ({ children }) => {
         <AuthContext.Provider value={{ ...state, dispatch }}>
             { children }
         </AuthContext.Provider>
-    )
-}
+    );
+};

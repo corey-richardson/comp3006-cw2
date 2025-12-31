@@ -9,7 +9,14 @@
     "lint": "npm run lint --prefix frontend && npm run lint --prefix backend"
   },
   "lint-staged": {
-    "frontend/src/**/*.js": "npm run lint --prefix frontend",
-    "backend/**/*.js": "npm run lint --prefix backend"
+    "frontend/src/**/*.{js,jsx}": [
+      "eslint --fix"
+    ],
+    "backend/**/*.js": [
+      "eslint --fix"
+    ]
+  },
+  "dependencies": {
+    "eslint-plugin-react": "^7.37.5"
   }
 }

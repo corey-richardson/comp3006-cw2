@@ -16,45 +16,45 @@ const Feed = () => {
 
     const [ feedType, setFeedType ] = useState(() => {
         return localStorage.getItem("previouslySelectedFeed") || null;
-    })
+    });
 
     useEffect(() => {
         if (authIsReady) {
             const previouslySelectedFeed = localStorage.getItem("previouslySelectedFeed");
 
             if (previouslySelectedFeed) {
-                setFeedType(previouslySelectedFeed)
+                setFeedType(previouslySelectedFeed);
             } else {
                 setFeedType(user?.token ? "following" : "global");
             }
         }
-    }, [authIsReady, user]);
+    }, [ authIsReady, user ]);
 
     useEffect(() => {
         setPage(1);
         fetchPage(1, feedType);
-    }, [feedType, fetchPage]);
+    }, [ feedType, fetchPage ]);
 
     const loadMore = () => {
         const nextPage = page + 1;
         fetchPage(nextPage, feedType);
-        setPage(nextPage);        
-    }
+        setPage(nextPage);
+    };
 
     const handleFeedChange = (type) => {
         setFeedType(type);
         localStorage.setItem("previouslySelectedFeed", type);
-    }
+    };
 
-    return ( 
+    return (
         <div className={styles.feed}>
             <header className={styles.feedHeader}>
                 <h2>Feed</h2>
             </header>
 
             <nav className={styles.feedTypeSelectors}>
-                <button 
-                    onClick={() => handleFeedChange("global")} 
+                <button
+                    onClick={() => handleFeedChange("global")}
                     className={clsx(styles.selectorItem, { [styles.active]: feedType === "global" })}
                     aria-label="Global Feed"
                     title="Explore posts from all users"
@@ -64,7 +64,7 @@ const Feed = () => {
 
                 {user && (
                     <>
-                        <button 
+                        <button
                             onClick={() => handleFeedChange("following")}
                             className={clsx(styles.selectorItem, { [styles.active]: feedType === "following" })}
                             aria-label="Following Feed"
@@ -73,8 +73,8 @@ const Feed = () => {
                             {<UserRoundCheck size={20} />} &nbsp; Following
                         </button>
 
-                        <Link 
-                            to="/posts/new" 
+                        <Link
+                            to="/posts/new"
                             className={styles.selectorItem}
                             aria-label="New Post"
                             title="Create and upload a new post"
@@ -102,6 +102,6 @@ const Feed = () => {
             </div>
         </div>
     );
-}
- 
+};
+
 export default Feed;

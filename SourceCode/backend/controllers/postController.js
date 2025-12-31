@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const Post = require("../models/postModel");
+const Relationship = require("../models/relationshipModel");
 const User = require("../models/userModel");
 
 const getPost = async (request, response) => {
@@ -97,12 +98,12 @@ const getFollowingPosts = async (request, response) => {
         const followingIds = following.map(f => f.following_id);
 
         const [ posts, totalPosts ] = await Promise.all([
-            await Post.find({ author: { $in: followingIds }})
+            await Post.find({ author: { $in: followingIds } })
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
                 .populate("author_id", "username firstName lastName"),
-            await Post.countDocuments({ author: { $in: followingIds }})
+            await Post.countDocuments({ author: { $in: followingIds } })
         ]);
 
         response.status(200).json({
@@ -114,7 +115,7 @@ const getFollowingPosts = async (request, response) => {
     } catch (e) {
         response.status(500).json({ error: e.message });
     }
-}
+};
 
 const createPost = async (request, response) => {
     const { body } = request.body;

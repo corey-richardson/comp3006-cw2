@@ -7,12 +7,12 @@ export const PostContext = createContext();
 export const postReducer = (state, action) => {
     switch (action.type) {
         case "SET_POSTS":
-            return { 
+            return {
                 posts: action.payload.posts,
                 hasMore: action.payload.hasMore
             };
         case "LOAD_MORE_POSTS":
-            return { 
+            return {
                 posts: [ ...state.posts, ...action.payload.posts ],
                 hasMore: action.payload.hasMore
             };
@@ -50,7 +50,7 @@ export const PostContextProvider = ({ children }) => {
                 dispatch({ type: "LOAD_MORE_POSTS", payload: json });
             }
         }
-    }, [user?.token]);
+    }, [ user?.token ]);
 
     useEffect(() => {
         if (user === undefined) return; // Guard against initialisations
@@ -63,12 +63,12 @@ export const PostContextProvider = ({ children }) => {
         });
 
         return () => socket.disconnect();
-    }, [user]);
-    
-    
+    }, [ user ]);
+
+
     return (
         <PostContext.Provider value={{ ...state, dispatch, fetchPage }}>
             { children }
         </PostContext.Provider>
-    )
-}
+    );
+};

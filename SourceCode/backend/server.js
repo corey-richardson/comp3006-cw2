@@ -29,9 +29,11 @@ app.use(express.json());
 app.set("socketio", io);
 io.on("connection", (socket) => {
     const token = socket.handshake.query.token;
+    // eslint-disable-next-line no-console
     console.log(`Client Connected: ${socket.id} | Token: ${!!token}`);
 
     socket.on("disconnect", () => {
+        // eslint-disable-next-line no-console
         console.log("User left your channel.");
     });
 });
