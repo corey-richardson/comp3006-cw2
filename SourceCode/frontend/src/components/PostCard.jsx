@@ -1,8 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
-import { User, MessageCircle, Heart, Trash } from "lucide-react";
-import { useAuthContext } from "../hooks/useAuthContext";
-
 import clsx from "clsx";
+import { User, MessageCircle, Heart, Trash } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuthContext } from "../hooks/useAuthContext";
 import styles from "../styles/PostCard.module.css";
 
 const PostCard = ({ post }) => {
@@ -14,11 +14,13 @@ const PostCard = ({ post }) => {
     const navigate = useNavigate();
 
     const handleLike = () => {
+        // eslint-disable-next-line no-console
         console.log("Liked post:", post._id);
     };
 
     const handleDelete = () => {
         if (window.confirm("Are you sure you want to delete this post?")) {
+            // eslint-disable-next-line no-console
             console.log("Delete post:", post._id);
         }
     };
@@ -30,8 +32,8 @@ const PostCard = ({ post }) => {
                     <User size={24} />
                 </div>
                 <div className={styles.userInformation}>
-                    <Link 
-                        to={`/profile/${author.username}`} 
+                    <Link
+                        to={`/profile/${author.username}`}
                         className={clsx(styles.username, { [styles.owner]: isOwner })}
                     >
                         {author.username || "Anonymous"}
@@ -45,37 +47,36 @@ const PostCard = ({ post }) => {
             </div>
 
             <div className={styles.footer}>
-                <button 
-                    className={styles.actionButton} 
+                <button
+                    className={styles.actionButton}
                     onClick={handleLike}
                 >
-                    <Heart 
-                        size={18} 
+                    <Heart
+                        size={18}
                         fill={ hasLiked ? "red" : "none" }
                         color={ hasLiked ? "red" : "currentColor" }
-                    /> 
+                    />
                     <span>{ post.totalLikes || 0 }</span>
                 </button>
-
 
                 <button
                     className={styles.actionButton}
                     onClick={() => navigate(`/posts/${post._id}`)}
                 >
-                    <MessageCircle size={18} /> 
+                    <MessageCircle size={18} />
                     <span>{ post.totalComments || 0 }</span>
                 </button>
 
                 {isOwner && (
-                    <button 
-                        className={clsx(styles.actionButton, styles.deleteAction)} 
+                    <button
+                        className={clsx(styles.actionButton, styles.deleteAction)}
                         onClick={handleDelete}
                     >
-                        <Trash size={18} /> 
+                        <Trash size={18} />
                         <span>Delete</span>
                     </button>
                 )}
-            
+
                 <span className={styles.date}>
                     { new Date(post.createdAt).toLocaleString() }
                 </span>

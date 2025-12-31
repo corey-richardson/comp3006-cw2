@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Navigate  } from "react-router-dom";
-import { useAuthContext } from "./hooks/useAuthContext";
 
 import Navbar from "./components/Navbar";
+import { useAuthContext } from "./hooks/useAuthContext";
 import Feed from "./pages/Feed";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
 import NewPost from "./pages/NewPost";
+import Profile from "./pages/Profile";
+import Signup from "./pages/Signup";
 
 function App() {
     const { user } = useAuthContext();

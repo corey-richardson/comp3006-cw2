@@ -1,8 +1,9 @@
+import clsx from "clsx";
+import { House, LogOut, UserRound } from "lucide-react";
 import { NavLink } from "react-router-dom";
+
 import { useAuthContext } from "../hooks/useAuthContext";
 import useLogout from "../hooks/useLogout";
-import { House, LogOut, UserRound } from "lucide-react";
-import clsx from "clsx";
 import styles from "../styles/Navbar.module.css";
 
 const Navbar = () => {

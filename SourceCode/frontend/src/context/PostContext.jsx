@@ -1,5 +1,6 @@
 import { createContext, useReducer, useEffect, useCallback } from "react";
 import { io } from "socket.io-client";
+
 import { useAuthContext } from "../hooks/useAuthContext";
 
 export const PostContext = createContext();
@@ -17,10 +18,11 @@ export const postReducer = (state, action) => {
                 hasMore: action.payload.hasMore
             };
         case "ADD_POST":
+        {
             const exists = state.posts.some(p => p._id === action.payload._id);
             if (exists) return state;
-
             return { ...state, posts: [ action.payload, ...state.posts ] };
+        }
         case "CLEAR_POSTS":
             return { posts: [], hasMore: false };
         default:
@@ -69,7 +71,6 @@ export const PostContextProvider = ({ children }) => {
 
         return () => socket.disconnect();
     }, [ user ]);
-
 
     return (
         <PostContext.Provider value={{ ...state, dispatch, fetchPage }}>

@@ -1,7 +1,4 @@
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
-
-const router = express.Router();
 
 const {
     loginUser,
@@ -10,6 +7,9 @@ const {
     getUserById,
     getUserByUsername,
 } = require("../controllers/userController");
+const requireAuth = require("../middleware/requireAuth");
+
+const router = express.Router();
 
 // Routes relative to "/api/users"
 // PUBLIC ROUTES

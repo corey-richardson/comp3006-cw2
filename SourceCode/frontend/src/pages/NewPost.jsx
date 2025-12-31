@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useCreatePost } from "../hooks/useCreatePost";
-import { useAuthContext } from "../hooks/useAuthContext";
-import { useNavigate } from "react-router-dom";
-import { Ban, Send, XCircle } from "lucide-react";
+
 import clsx from "clsx";
+import { Ban, Send, XCircle } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useCreatePost } from "../hooks/useCreatePost";
 import styles from "../styles/Forms.module.css";
 
 const NewPost = () => {
@@ -80,7 +82,7 @@ const NewPost = () => {
                         )}
                     </button>
                 </div>
-                
+
                 <p className="small centred">Posting as: <strong>@{user.username}</strong></p>
             </form>
         </div>

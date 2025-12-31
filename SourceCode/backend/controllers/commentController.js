@@ -22,7 +22,6 @@ const getComments = async (request, response) => {
     response.status(200).json({ comments, totalComments });
 };
 
-
 const createComment = async (request, response) => {
     const { post_id, body } = request.body;
     const author_id = request.user._id;
@@ -47,7 +46,6 @@ const createComment = async (request, response) => {
     }
 };
 
-
 const deleteComment = async (request, response) => {
     const { commentId } = request.params;
     const userId = request.user._id;
@@ -69,7 +67,6 @@ const deleteComment = async (request, response) => {
 
     response.status(200).json(comment);
 };
-
 
 const updateComment = async (request, response) => {
     const { commentId } = request.params;

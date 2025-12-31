@@ -17,7 +17,7 @@ const addPostMetricsHelper = async (posts) => {
             totalLikes
         };
     }));
-}
+};
 
 const getPost = async (request, response) => {
     const { id } = request.params;
@@ -46,7 +46,7 @@ const getPosts = async (request, response) => {
                 .limit(limit)
                 .populate("author_id", "username firstName lastName"),
             Post.countDocuments()
-        ])
+        ]);
 
         const postsWithMetrics = await addPostMetricsHelper(posts);
 
@@ -168,7 +168,6 @@ const createPost = async (request, response) => {
     }
 };
 
-
 const deletePost = async (request, response) => {
     const { id } = request.params;
     const author_id = request.user._id;
@@ -208,7 +207,6 @@ const deletePost = async (request, response) => {
     }
 };
 
-
 const updatePost = async (request, response) => {
     const { id } = request.params;
     const author_id = request.user._id;
@@ -227,6 +225,5 @@ const updatePost = async (request, response) => {
 
     response.status(200).json(post);
 };
-
 
 module.exports = { getPosts, getPost, getUsersPosts, getFollowingPosts, createPost, deletePost, updatePost };

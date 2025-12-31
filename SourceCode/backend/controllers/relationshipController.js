@@ -37,7 +37,6 @@ const followUser = async (request, response) => {
     }
 };
 
-
 const unfollowUser = async (request, response) => {
     const { targetUserId } = request.params;
     const follower_id = request.user._id;
@@ -69,7 +68,6 @@ const unfollowUser = async (request, response) => {
     }
 };
 
-
 const getFollowing = async (request, response) => {
     const { userId } = request.params;
 
@@ -92,7 +90,6 @@ const getFollowing = async (request, response) => {
     }
 };
 
-
 const getFollowers = async (request, response) => {
     const { userId } = request.params;
 
@@ -114,6 +111,5 @@ const getFollowers = async (request, response) => {
         response.status(500).json({ error: e.message });
     }
 };
-
 
 module.exports = { followUser, unfollowUser, getFollowing, getFollowers };

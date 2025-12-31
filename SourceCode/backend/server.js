@@ -1,10 +1,10 @@
 require("dotenv").config();
 
+const http = require("http");
+
+const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
-const http = require("http");
-const cors = require("cors");
-
 const { Server } = require("socket.io");
 
 const commentRoutes = require("./routes/comments");

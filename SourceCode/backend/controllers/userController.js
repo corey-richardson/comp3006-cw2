@@ -1,18 +1,16 @@
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const Comment = require("../models/commentModel");
 const Post = require("../models/postModel");
 const Relationship = require("../models/relationshipModel");
 const User = require("../models/userModel");
 
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const validator = require("validator");
-
 const createJwt = (_id) => {
     return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
-
 
 const signupUser = async (request, response) => {
     const { username, email, password, firstName, lastName } = request.body;
@@ -54,7 +52,6 @@ const signupUser = async (request, response) => {
     }
 };
 
-
 const loginUser = async (request, response) => {
     const { email, password } = request.body;
 
@@ -81,7 +78,6 @@ const loginUser = async (request, response) => {
         response.status(500).json({ error: e.message });
     }
 };
-
 
 const deleteUser = async (request, response) => {
     // Delete User -> Posts/Comments CASCADE
@@ -115,7 +111,6 @@ const deleteUser = async (request, response) => {
     }
 };
 
-
 const getUserById = async (request, response) => {
     const { id } = request.params;
 
@@ -137,7 +132,6 @@ const getUserById = async (request, response) => {
     }
 };
 
-
 const getUserByUsername = async (request, response) => {
     const { username } = request.params;
 
@@ -154,6 +148,5 @@ const getUserByUsername = async (request, response) => {
         response.status(500).json({ error: e.message });
     }
 };
-
 
 module.exports = { loginUser, signupUser, deleteUser, getUserById, getUserByUsername };

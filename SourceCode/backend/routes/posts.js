@@ -1,7 +1,4 @@
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
-
-const router = express.Router();
 
 const {
     getPosts,
@@ -12,6 +9,9 @@ const {
     deletePost,
     updatePost
 } = require("../controllers/postController");
+const requireAuth = require("../middleware/requireAuth");
+
+const router = express.Router();
 
 // Routes relative to "/api/posts"
 // PUBLIC ROUTES

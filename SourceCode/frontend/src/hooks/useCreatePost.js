@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { usePosts } from "./usePosts";
+
 import { useAuthContext } from "./useAuthContext";
+import { usePosts } from "./usePosts";
 
 export const useCreatePost = () => {
     const [ error, setError ] = useState();
@@ -23,7 +24,7 @@ export const useCreatePost = () => {
         try {
             const response = await fetch(`${baseUrl}/posts`, {
                 method: "POST",
-                headers: { 
+                headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${user.token}`
                 },

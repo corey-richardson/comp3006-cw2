@@ -1,8 +1,4 @@
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
-
-// Need to inherit :postId from parent router ("/api/posts/:postId/comments")
-const router = express.Router({ mergeParams: true });
 
 const {
     getComments,
@@ -10,6 +6,10 @@ const {
     deleteComment,
     updateComment,
 } = require("../controllers/commentController");
+const requireAuth = require("../middleware/requireAuth");
+
+// Need to inherit :postId from parent router ("/api/posts/:postId/comments")
+const router = express.Router({ mergeParams: true });
 
 // Routes relative to "/api/posts/:postId/comments"
 // PUBLIC ROUTES

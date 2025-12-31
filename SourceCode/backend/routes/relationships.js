@@ -1,7 +1,4 @@
 const express = require("express");
-const requireAuth = require("../middleware/requireAuth");
-
-const router = express.Router();
 
 const {
     followUser,
@@ -9,6 +6,9 @@ const {
     getFollowing,
     getFollowers,
 } = require("../controllers/relationshipController");
+const requireAuth = require("../middleware/requireAuth");
+
+const router = express.Router();
 
 // Routes relative to "/api/relationships"
 // PUBLIC ROUTES

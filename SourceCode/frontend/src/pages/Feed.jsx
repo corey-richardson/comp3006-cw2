@@ -1,10 +1,12 @@
-import { usePosts } from "../hooks/usePosts";
-import { useState, useEffect } from "react";
-import { useAuthContext } from "../hooks/useAuthContext";
-import { Link } from "react-router-dom";
+
 import clsx from "clsx";
 import { Earth, NotebookPen, UserRoundCheck  } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import PostCard from "../components/PostCard";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { usePosts } from "../hooks/usePosts";
 import styles from "../styles/Feed.module.css";
 
 const Feed = () => {
