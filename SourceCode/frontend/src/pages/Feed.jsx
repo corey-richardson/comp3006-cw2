@@ -12,15 +12,15 @@ const Feed = () => {
 
     const [ page, setPage ] = useState(1);
 
-    const { user } = useAuthContext();
+    const { user, authIsReady } = useAuthContext();
     const [ feedType, setFeedType ] = useState("global");
     // () => { user?.token ? "following" : "global" }
 
     useEffect(() => {
-        if (user?.token) {
-            setFeedType("following");
+        if (authIsReady) {
+            setFeedType(user?.token ? "following" : "global");
         }
-    }, [user]);
+    }, [authIsReady, user]);
 
     useEffect(() => {
         setPage(1);
