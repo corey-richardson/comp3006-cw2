@@ -13,12 +13,20 @@ const Feed = () => {
     const [ page, setPage ] = useState(1);
 
     const { user, authIsReady } = useAuthContext();
-    const [ feedType, setFeedType ] = useState("global");
-    // () => { user?.token ? "following" : "global" }
+
+    const [ feedType, setFeedType ] = useState(() => {
+        return localStorage.getItem("previouslySelectedFeed") || null;
+    })
 
     useEffect(() => {
         if (authIsReady) {
-            setFeedType(user?.token ? "following" : "global");
+            const previouslySelectedFeed = localStorage.getItem("previouslySelectedFeed");
+
+            if (previouslySelectedFeed) {
+                setFeedType(previouslySelectedFeed)
+            } else {
+                setFeedType(user?.token ? "following" : "global");
+            }
         }
     }, [authIsReady, user]);
 
@@ -33,6 +41,11 @@ const Feed = () => {
         setPage(nextPage);        
     }
 
+    const handleFeedChange = (type) => {
+        setFeedType(type);
+        localStorage.setItem("previouslySelectedFeed", type);
+    }
+
     return ( 
         <div className={styles.feed}>
             <header className={styles.feedHeader}>
@@ -41,7 +54,7 @@ const Feed = () => {
 
             <nav className={styles.feedTypeSelectors}>
                 <button 
-                    onClick={() => setFeedType("global")} 
+                    onClick={() => handleFeedChange("global")} 
                     className={clsx(styles.selectorItem, { [styles.active]: feedType === "global" })}
                     aria-label="Global Feed"
                     title="Explore posts from all users"
@@ -52,7 +65,7 @@ const Feed = () => {
                 {user && (
                     <>
                         <button 
-                            onClick={() => setFeedType("following")}
+                            onClick={() => handleFeedChange("following")}
                             className={clsx(styles.selectorItem, { [styles.active]: feedType === "following" })}
                             aria-label="Following Feed"
                             title="Explore posts from users you follow"
