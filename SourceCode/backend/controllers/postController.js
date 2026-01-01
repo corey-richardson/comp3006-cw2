@@ -240,16 +240,11 @@ const likePost = async (request, response) => {
             return response.status(404).json({ error: "Post not found." });
         }
 
-        // const alreadyLiked = post.likes.some(like => like.toString() === userId);
         const alreadyLiked = post.likes.some(likeId => String(likeId) === String(userId));
-        
-        console.log("User ID:", userId);
-        console.log("Existing Likes:", post.likes);
-        console.log("Already Liked?:", alreadyLiked);
 
         // https://mongoosejs.com/docs/5.x/docs/api/array.html#mongoosearray_MongooseArray-addToSet
-        const updateQuery = alreadyLiked 
-            ? { $pull: { likes: userId } } 
+        const updateQuery = alreadyLiked
+            ? { $pull: { likes: userId } }
             : { $addToSet: { likes: userId } };
 
         const updatedPost = await Post.findByIdAndUpdate(
@@ -273,8 +268,7 @@ const likePost = async (request, response) => {
         response.status(200).json(postWithMetrics);
     } catch (e) {
         response.status(500).json({ error: e.message });
-    } 
-}
+    }
+};
 
 module.exports = { getPosts, getPost, getUsersPosts, getFollowingPosts, createPost, deletePost, updatePost, likePost };
-

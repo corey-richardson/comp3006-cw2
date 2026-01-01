@@ -92,8 +92,12 @@
     display: inline-block;
 }
 
-.actionButton:hover {
+.actionButton:hover:not(:disabled) {
     background-color: var(--gray);
+}
+
+.actionButton:disabled {
+    cursor: default;
 }
 
 .date {

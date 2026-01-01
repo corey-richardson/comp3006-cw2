@@ -45,6 +45,13 @@ const Navbar = () => {
                         <>
                             <NavLink
                                 className={({ isActive }) => clsx(styles.navItem, { [styles.active]: isActive })}
+                                to="/"
+                                aria-label="Home feed"
+                                title="Explore the home feed"
+                            >{<House size={20} />}</NavLink>
+
+                            <NavLink
+                                className={({ isActive }) => clsx(styles.navItem, { [styles.active]: isActive })}
                                 to="/login"
                             >Login</NavLink>
 

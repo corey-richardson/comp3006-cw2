@@ -12,7 +12,7 @@ const PostCard = ({ post }) => {
 
     const author = post?.author_id;
     const isOwner = authIsReady && user && author && user._id === author._id;
-    
+
     const hasLiked = user && post.likes?.includes(user._id);
 
     const navigate = useNavigate();
@@ -53,6 +53,7 @@ const PostCard = ({ post }) => {
                 <button
                     className={styles.actionButton}
                     onClick={handleLike}
+                    disabled={!user || isOwner}
                 >
                     <Heart
                         size={18}
