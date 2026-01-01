@@ -24,8 +24,17 @@ const followUser = async (request, response) => {
             following_id: targetUserId,
         });
 
+        const [ followerCount, followingCount ] = await Promise.all([
+            Relationship.countDocuments({ following_id: targetUserId }),
+            Relationship.countDocuments({ follower_id: targetUserId }),
+        ]);
+
         const io = request.app.get("socketio");
-        io.emit("new_follower", follow);
+        io.emit("relationship_update", {
+            userId: targetUserId,
+            followerCount,
+            followingCount,
+        });
 
         response.status(201).json(follow);
     } catch (e) {
@@ -61,6 +70,18 @@ const unfollowUser = async (request, response) => {
         if (!unfollow) {
             return response.status(404).json({ error: "Relationship not found." });
         }
+
+        const [ followerCount, followingCount ] = await Promise.all([
+            Relationship.countDocuments({ following_id: targetUserId }),
+            Relationship.countDocuments({ follower_id: targetUserId }),
+        ]);
+
+        const io = request.app.get("socketio");
+        io.emit("relationship_update", {
+            userId: targetUserId,
+            followerCount,
+            followingCount,
+        });
 
         response.status(200).json(unfollow);
     } catch (e) {

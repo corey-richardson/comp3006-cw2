@@ -1,91 +1,63 @@
+import { User } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useAuthContext } from "../hooks/useAuthContext";
 
-import { User } from "lucide-react";
-
-import PostCard from "../components/PostCard";
 import FollowButton from "../components/FollowButton";
-
-import styles from "../styles/Profile.module.css";
+import PostCard from "../components/PostCard";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useRelationship } from "../hooks/useRelationshipContext";
+import { usePosts } from "../hooks/usePosts";
 import postStyles from "../styles/Feed.module.css";
+import styles from "../styles/Profile.module.css";
 
 const Profile = () => {
     const { username } = useParams();
+
     const { user: currentUser } = useAuthContext();
+    const { followerCount, followingCount, fetchProfileMetrics } = useRelationship();
+    const { posts, hasMore, fetchPage, dispatch } = usePosts();
 
     const [ profile, setProfile ] = useState(null);
-    const [ posts, setPosts ] = useState([]);
-    const [ totalPosts, setTotalPosts ] = useState(0);
-
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(false);
-    const [isFetchingMore, setIsFetchingMore] = useState(false);
+    const [ page, setPage ] = useState(1);
 
     const [ isLoading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState(null);
 
     const baseUrl = process.env.REACT_APP_API_BASE_URL || "/api";
 
-    const fetchInitialProfile = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
-
-        try {
-            const [ userResponse, postsResponse ] = await Promise.all([
-                fetch(`${baseUrl}/users/username/${username}`),
-                fetch(`${baseUrl}/posts/user/${username}?page=1`),
-            ]);
-
-            if (!userResponse.ok) throw new Error("User not found.");
-            if (!postsResponse.ok) throw new Error("Failed to fetch users' posts.");
-
-            const [ userData, postsData ] = await Promise.all([
-                userResponse.json(),
-                postsResponse.json(),
-            ]);
-
-            console.log(postsData);
-
-            setProfile(userData);
-            setPosts(postsData.posts);
-            setTotalPosts(postsData.totalPosts);
-            setHasMore(postsData.hasMore);
-            setPage(1);
-
-        } catch (error) {
-            setError(error.message);
-        } finally {
-            setIsLoading(false);
-        }
-
-    }, [ baseUrl, username ]);
-
-    const loadMore = useCallback(async () => {
-        if (!hasMore || isFetchingMore) return;
-
-        setIsFetchingMore(true);
-        const nextPage = page + 1;
-
-        try {
-            const response = await fetch(`${baseUrl}/posts/user/${username}?page=${nextPage}`);
-            const json = await response.json();
-
-            if (response.ok) {
-                setPosts(prev => [...prev, ...json.posts]);
-                setHasMore(json.hasMore);
-                setPage(nextPage);
-            }
-        } catch (error) {
-            setError("Failed to fetch additional posts.");
-        } finally {
-            setIsFetchingMore(false);
-        }
-    }, [ baseUrl, hasMore, page, username ]);
-
     useEffect(() => {
+        const fetchInitialProfile = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                const user = await fetch(`${baseUrl}/users/username/${username}`);
+                if (!user.ok) throw new Error("User not found.");
+
+                const json = await user.json();
+
+                setProfile(json);
+                
+                fetchProfileMetrics(json._id);
+                fetchPage(1, "profile", username);
+                setPage(1);
+
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
         fetchInitialProfile();
-    }, [ fetchInitialProfile ]);
+        return () => dispatch({ type: "CLEAR_POSTS" });
+    }, [ username, baseUrl, fetchProfileMetrics, fetchPage, dispatch ]);
+
+    const loadMore = async () => {
+        const nextPage = page + 1;
+        fetchPage(nextPage, "profile", username);
+        setPage(nextPage);
+    };
 
     const isOwner = currentUser?.username === username;
 
@@ -98,7 +70,7 @@ const Profile = () => {
                 <div className={styles.avatar}>
                     <User size={48} />
                 </div>
-                
+
                 <div className={styles.details}>
                     <div className={styles.nameRow}>
                         <h1>{profile?.firstName || "Anonymous"} {profile.lastName}</h1>
@@ -107,21 +79,21 @@ const Profile = () => {
                         )}
                     </div>
                     <p className={styles.handle}>@{profile.username}</p>
-                    
+
                     <div className={styles.metrics}>
                         <Link
                             to="./following"
                         >
-                            <strong>{profile.followingCount || 0}</strong> Following
+                            <strong>{followingCount || 0}</strong> Following
                         </Link> |
 
                         <Link
                             to="./followers"
                         >
-                            <strong>{profile.followerCount || 0}</strong> Followers
+                            <strong>{followerCount || 0}</strong> Followers
                         </Link> |
 
-                        <span><strong>{totalPosts || 0}</strong> Posts</span>
+                        <span><strong>{profile?.totalPosts || 0}</strong> Posts</span>
                     </div>
                 </div>
             </header>

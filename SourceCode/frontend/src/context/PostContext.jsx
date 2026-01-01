@@ -51,8 +51,14 @@ export const PostContextProvider = ({ children }) => {
     const baseUrl = process.env.REACT_APP_API_BASE_URL || "/api";
 
     /** API ACTIONS */
-    const fetchPage = useCallback(async ( page, type ) => {
-        const endpoint = type === "following" ? "/posts/following" : "/posts";
+    const fetchPage = useCallback(async ( page, type, username = null ) => {
+        
+        let endpoint = "/posts";
+        if (type === "following") {
+            endpoint = "/posts/following";
+        } else if (type === "profile" && username) {
+            endpoint = `/posts/user/${username}`;
+        }
 
         try {
             const response = await fetch(`${baseUrl}${endpoint}?page=${page}`, {

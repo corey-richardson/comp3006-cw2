@@ -153,7 +153,7 @@ const getUserByUsername = async (request, response) => {
             followerCount,
             followingCount
         });
-        
+
     } catch (e) {
         response.status(500).json({ error: e.message });
     }

@@ -91,8 +91,6 @@ const getUsersPosts = async (request, response) => {
             Post.countDocuments({ author_id: user._id })
         ]);
 
-        console.log(totalPosts);
-
         const postsWithMetrics = await addPostMetricsHelper(posts);
 
         response.status(200).json({
