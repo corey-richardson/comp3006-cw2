@@ -226,4 +226,55 @@ const updatePost = async (request, response) => {
     response.status(200).json(post);
 };
 
-module.exports = { getPosts, getPost, getUsersPosts, getFollowingPosts, createPost, deletePost, updatePost };
+const likePost = async (request, response) => {
+    const { id } = request.params;
+    const userId = request.user._id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return response.status(400).json({ error: "Invalid ID format." });
+    }
+
+    try {
+        const post = await Post.findById(id);
+        if (!post) {
+            return response.status(404).json({ error: "Post not found." });
+        }
+
+        // const alreadyLiked = post.likes.some(like => like.toString() === userId);
+        const alreadyLiked = post.likes.some(likeId => String(likeId) === String(userId));
+        
+        console.log("User ID:", userId);
+        console.log("Existing Likes:", post.likes);
+        console.log("Already Liked?:", alreadyLiked);
+
+        // https://mongoosejs.com/docs/5.x/docs/api/array.html#mongoosearray_MongooseArray-addToSet
+        const updateQuery = alreadyLiked 
+            ? { $pull: { likes: userId } } 
+            : { $addToSet: { likes: userId } };
+
+        const updatedPost = await Post.findByIdAndUpdate(
+            id,
+            updateQuery,
+            { new: true }
+        ).populate("author_id", "username firstName lastName");
+
+        const totalComments = await Comment.countDocuments({ post_id: id });
+        const postWithMetrics = {
+            ...updatedPost._doc,
+            totalLikes: updatedPost.likes.length,
+            totalComments
+        };
+
+        const io = request.app.get("socketio");
+        if (io) {
+            io.emit("updated_post", postWithMetrics);
+        }
+
+        response.status(200).json(postWithMetrics);
+    } catch (e) {
+        response.status(500).json({ error: e.message });
+    } 
+}
+
+module.exports = { getPosts, getPost, getUsersPosts, getFollowingPosts, createPost, deletePost, updatePost, likePost };
+

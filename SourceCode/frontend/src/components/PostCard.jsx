@@ -3,19 +3,22 @@ import { User, MessageCircle, Heart, Trash } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuthContext } from "../hooks/useAuthContext";
+import { usePosts } from "../hooks/usePosts";
 import styles from "../styles/PostCard.module.css";
 
 const PostCard = ({ post }) => {
     const { user, authIsReady } = useAuthContext();
+    const { toggleLike } = usePosts();
+
     const author = post?.author_id;
     const isOwner = authIsReady && user && author && user._id === author._id;
+    
     const hasLiked = user && post.likes?.includes(user._id);
 
     const navigate = useNavigate();
 
     const handleLike = () => {
-        // eslint-disable-next-line no-console
-        console.log("Liked post:", post._id);
+        toggleLike(post._id);
     };
 
     const handleDelete = () => {

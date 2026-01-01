@@ -7,7 +7,8 @@ const {
     getFollowingPosts,
     createPost,
     deletePost,
-    updatePost
+    updatePost,
+    likePost
 } = require("../controllers/postController");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -25,5 +26,6 @@ router.get("/following", getFollowingPosts);
 router.post("/", createPost);
 router.delete("/post/:id", deletePost);
 router.patch("/post/:id", updatePost);
+router.patch("/post/:id/like", likePost);
 
 module.exports = router;
