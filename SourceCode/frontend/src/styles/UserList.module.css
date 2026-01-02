@@ -1,0 +1,45 @@
+.title {
+    padding: 2rem 0 1rem 0;
+    font-size: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+}
+
+.userCard {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+    gap: 1rem;
+}
+
+.avatarExtended {
+    width: 3rem !important;
+    height: 3rem !important;
+}
+
+.userDetails {
+    flex: 1;
+}
+
+.userDetails a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.fullName {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+}
