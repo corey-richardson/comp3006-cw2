@@ -1,18 +1,16 @@
 const express = require("express");
 
 const {
+    getFollowing,
+    getFollowers
+} = require("../controllers/relationshipController");
+const {
     loginUser,
     signupUser,
     deleteUser,
     getUserById,
     getUserByUsername,
 } = require("../controllers/userController");
-
-const {
-    getFollowing,
-    getFollowers
-} = require("../controllers/relationshipController");
-
 const requireAuth = require("../middleware/requireAuth");
 
 const router = express.Router();

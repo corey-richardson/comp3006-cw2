@@ -37,15 +37,15 @@ export const postReducer = (state, action) => {
             };
 
         case "REMOVE_POST":
-            // lexical declaration in case block, needs scope guarding for linting
-            {
-                const postExists = state.posts.some(post => post._id === action.payload);
-                return {
-                    ...state,
-                    posts: state.posts.filter(post => post._id !== action.payload),
-                    totalPosts: postExists ? Math.max(0, (state.totalPosts || 0) - 1) : state.totalPosts,
-                };
-            }
+        // lexical declaration in case block, needs scope guarding for linting
+        {
+            const postExists = state.posts.some(post => post._id === action.payload);
+            return {
+                ...state,
+                posts: state.posts.filter(post => post._id !== action.payload),
+                totalPosts: postExists ? Math.max(0, (state.totalPosts || 0) - 1) : state.totalPosts,
+            };
+        }
 
         case "CLEAR_POSTS":
             return { posts: [], hasMore: false };

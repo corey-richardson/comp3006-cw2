@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 
 import UserList from "../components/UserList";
 
@@ -40,11 +40,11 @@ const Followers = () => {
     if (loading) return <div className="centred">Loading followers...</div>;
     if (error) return <div className="error">{ error }</div>;
 
-    return ( 
+    return (
         <div className="container">
-            <UserList users={users} title={`Followers of @${ username } (${users.length})`} />
+            <UserList users={users} type="followers" />
         </div>
     );
-}
- 
+};
+
 export default Followers;

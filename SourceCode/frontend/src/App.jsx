@@ -3,12 +3,12 @@ import { BrowserRouter, Routes, Route, Navigate  } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { useAuthContext } from "./hooks/useAuthContext";
 import Feed from "./pages/Feed";
+import Followers from "./pages/Followers";
+import Following from "./pages/Following";
 import Login from "./pages/Login";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
-import Followers from "./pages/Followers";
-import Following from "./pages/Following";
 
 function App() {
     const { user, authIsReady } = useAuthContext();
