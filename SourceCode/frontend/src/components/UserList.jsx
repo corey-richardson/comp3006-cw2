@@ -53,5 +53,4 @@ const UserList = ({ users, type }) => {
     );
 };
 
-
 export default UserList;

@@ -7,9 +7,9 @@ import Followers from "./pages/Followers";
 import Following from "./pages/Following";
 import Login from "./pages/Login";
 import NewPost from "./pages/NewPost";
+import Post from "./pages/Post";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
-import Post from "./pages/Post";
 
 function App() {
     const { user, authIsReady } = useAuthContext();

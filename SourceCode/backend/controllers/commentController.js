@@ -15,7 +15,9 @@ const getComments = async (request, response) => {
     }
 
     const [ comments, totalComments ] = await Promise.all([
-        await Comment.find({ post_id: postId }),
+        await Comment.find({ post_id: postId })
+            .populate("author_id", "username firstName lastName")
+            .sort({ createdAt: -1 }),
         await Comment.countDocuments({ post_id: postId })
     ]);
 
@@ -37,8 +39,10 @@ const createComment = async (request, response) => {
             post_id, author_id, body
         });
 
+        const populatedComment = await comment.populate("author_id", "username firstName lastName");
+
         const io = request.app.get("socketio");
-        io.emit("new_comment", comment);
+        io.emit("new_comment", populatedComment);
 
         response.status(201).json(comment);
     } catch (e) {

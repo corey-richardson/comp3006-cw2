@@ -33,15 +33,15 @@ export const postReducer = (state, action) => {
                 };
 
         case "UPDATE_POST":
-            {
-                const exists = state.posts.find(post => post._id === action.payload._id);
-                return {
-                    ...state,
-                    posts: exists 
-                        ? state.posts.map(post => post._id === action.payload._id ? action.payload : post)
-                        : [action.payload, ...state.posts]
-                };
-            }
+        {
+            const exists = state.posts.find(post => post._id === action.payload._id);
+            return {
+                ...state,
+                posts: exists
+                    ? state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+                    : [ action.payload, ...state.posts ]
+            };
+        }
 
         case "REMOVE_POST":
         // lexical declaration in case block, needs scope guarding for linting

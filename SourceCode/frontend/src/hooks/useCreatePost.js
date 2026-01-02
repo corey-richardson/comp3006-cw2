@@ -34,14 +34,12 @@ export const useCreatePost = () => {
             const json = await response.json();
 
             if (!response.ok) {
-                setIsLoading(false);
-                setError(json.error);
-                return;
+                throw new Error(json.error || "Failed to create post.");
             }
 
             dispatch({ type: "ADD_POST", payload: json });
-        } catch (e) {
-            setError(e.message);
+        } catch (error) {
+            setError(error);
         } finally {
             setIsLoading(false);
         }
