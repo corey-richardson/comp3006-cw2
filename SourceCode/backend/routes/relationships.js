@@ -3,8 +3,6 @@ const express = require("express");
 const {
     followUser,
     unfollowUser,
-    getFollowing,
-    getFollowers,
 } = require("../controllers/relationshipController");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -18,7 +16,5 @@ router.use(requireAuth);
 // PROTECTED ROUTES
 router.post("/:targetUserId", followUser);
 router.delete("/:targetUserId", unfollowUser);
-router.get("/:userId/following", getFollowing);
-router.get("/:userId/followers", getFollowers);
 
 module.exports = router;

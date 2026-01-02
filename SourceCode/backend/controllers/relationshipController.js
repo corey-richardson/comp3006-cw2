@@ -90,19 +90,14 @@ const unfollowUser = async (request, response) => {
 };
 
 const getFollowing = async (request, response) => {
-    const { userId } = request.params;
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return response.status(400).json({ error: "Invalid Target User ID format." });
-    }
+    const { username } = request.params;
 
     try {
-        if (!(await User.exists({ _id: userId }))) {
-            return response.status(404).json({ error: "User not found." });
-        }
+        const user = await User.findOne({ username });
+        if (!user) return response.status(404).json({ error: "User not found." });
 
         const following = await Relationship
-            .find({ follower_id: userId })
+            .find({ follower_id: user._id })
             .populate("following_id", "username firstName lastName");
 
         response.status(200).json(following);
@@ -112,19 +107,14 @@ const getFollowing = async (request, response) => {
 };
 
 const getFollowers = async (request, response) => {
-    const { userId } = request.params;
-
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-        return response.status(400).json({ error: "Invalid Target User ID format." });
-    }
+    const { username } = request.params;
 
     try {
-        if (!(await User.exists({ _id: userId }))) {
-            return response.status(404).json({ error: "User not found." });
-        }
+        const user = await User.findOne({ username });
+        if (!user) return response.status(404).json({ error: "User not found." });
 
         const followers = await Relationship
-            .find({ following_id: userId })
+            .find({ following_id: user._id })
             .populate("follower_id", "username firstName lastName");
 
         response.status(200).json(followers);
