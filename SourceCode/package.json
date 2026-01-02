@@ -12,10 +12,10 @@
   },
   "lint-staged": {
     "frontend/src/**/*.{js,jsx}": [
-      "eslint --fix"
+      "eslint --fix --config eslint.config.mjs"
     ],
     "backend/**/*.js": [
-      "eslint --fix"
+      "eslint --fix --config eslint.config.mjs"
     ]
   }
 }
