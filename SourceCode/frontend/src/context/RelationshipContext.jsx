@@ -87,7 +87,7 @@ export const RelationshipContextProvider = ({ children }) => {
         };
 
         fetchFollowing();
-    }, [ user?._id, user?.token, baseUrl ]);
+    }, [ user?._id, user?.username, user?.token, baseUrl ]);
 
     const fetchProfileMetrics = useCallback(async (targetUserId) => {
         try  {
