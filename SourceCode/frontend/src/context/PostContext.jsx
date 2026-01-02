@@ -10,6 +10,7 @@ export const postReducer = (state, action) => {
 
         case "SET_POSTS":
             return {
+                ...state,
                 posts: action.payload.posts,
                 hasMore: action.payload.hasMore,
                 totalPosts: action.payload.totalPosts || 0,
@@ -17,6 +18,7 @@ export const postReducer = (state, action) => {
 
         case "LOAD_MORE_POSTS":
             return {
+                ...state,
                 posts: [ ...state.posts, ...action.payload.posts ],
                 hasMore: action.payload.hasMore
             };
@@ -31,10 +33,15 @@ export const postReducer = (state, action) => {
                 };
 
         case "UPDATE_POST":
-            return {
-                ...state,
-                posts: state.posts.map(post => post._id === action.payload._id ? action.payload : post)
-            };
+            {
+                const exists = state.posts.find(post => post._id === action.payload._id);
+                return {
+                    ...state,
+                    posts: exists 
+                        ? state.posts.map(post => post._id === action.payload._id ? action.payload : post)
+                        : [action.payload, ...state.posts]
+                };
+            }
 
         case "REMOVE_POST":
         // lexical declaration in case block, needs scope guarding for linting

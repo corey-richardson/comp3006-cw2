@@ -25,7 +25,9 @@ const getPost = async (request, response) => {
         return response.status(400).json({ error: "Invalid ID format." });
     }
 
-    const post = await Post.findById(id);
+    const post = await Post
+        .findById(id)
+        .populate("author_id", "username firstName lastName");
     if (!post) {
         return response.status(404).json({ error: "Post not found." });
     }

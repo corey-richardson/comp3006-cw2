@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import NewPost from "./pages/NewPost";
 import Profile from "./pages/Profile";
 import Signup from "./pages/Signup";
+import Post from "./pages/Post";
 
 function App() {
     const { user, authIsReady } = useAuthContext();
@@ -44,6 +45,11 @@ function App() {
                             <Route
                                 path="/profile/:username/following"
                                 element={ user ? <Profile /> : <Navigate to="/login"/> }
+                            />
+
+                            <Route
+                                path="/post/:id"
+                                element={ <Post /> }
                             />
 
                             <Route

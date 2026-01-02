@@ -50,7 +50,7 @@ const Profile = () => {
         };
 
         fetchInitialProfile();
-        return () => dispatch({ type: "CLEAR_POSTS" });
+        // return () => dispatch({ type: "CLEAR_POSTS" });
     }, [ username, baseUrl, fetchProfileMetrics, fetchPage, dispatch ]);
 
     const loadMore = async () => {

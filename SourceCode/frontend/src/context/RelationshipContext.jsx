@@ -114,7 +114,6 @@ export const RelationshipContextProvider = ({ children }) => {
 
     const isAlreadyFollowing = useCallback((userId) => {
         if (!state.following) return false;
-        console.log("Checking if following:", userId, "against list:", state.following);
         return state.following.some(id => String(id) === String(userId));
     }, [ state.following ]);
 

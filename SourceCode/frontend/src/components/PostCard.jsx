@@ -69,7 +69,7 @@ const PostCard = ({ post }) => {
 
                 <button
                     className={styles.actionButton}
-                    onClick={() => navigate(`/posts/${post._id}`)}
+                    onClick={() => navigate(`/post/${post._id}`)}
                 >
                     <MessageCircle size={18} />
                     <span>{ post.totalComments || 0 }</span>
