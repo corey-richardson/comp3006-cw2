@@ -30,6 +30,7 @@
     max-width: 1200px !important;
     margin: auto !important;
     margin-top: 0 !important; 
+    box-sizing: border-box;
 }
 
 .flexContainer {

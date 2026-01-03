@@ -1,7 +1,9 @@
 import clsx from "clsx";
-import { User, MessageCircle, Heart, Trash } from "lucide-react";
+import { User, MessageCircle, Heart, Trash, Pencil } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import EditPost from "../components/EditPost";
 import FollowButton from "../components/FollowButton";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { usePosts } from "../hooks/usePosts";
@@ -11,6 +13,8 @@ const PostCard = ({ post }) => {
     const { user, authIsReady } = useAuthContext();
     const { deletePost, toggleLike } = usePosts();
 
+    const [ isEditing, setIsEditing ] = useState(false);
+
     const author = post?.author_id;
     const isOwner = authIsReady && user && author && user._id === author._id;
 
@@ -18,10 +22,7 @@ const PostCard = ({ post }) => {
 
     const navigate = useNavigate();
 
-    const handleLike = () => {
-        toggleLike(post._id);
-    };
-
+    const handleLike = () => toggleLike(post._id);
     const handleDelete = () => {
         if (window.confirm("Are you sure you want to delete this post?")) {
             deletePost(post._id);
@@ -50,7 +51,14 @@ const PostCard = ({ post }) => {
             </div>
 
             <div className={styles.body}>
-                {post.body}
+                { isEditing ? (
+                    <EditPost
+                        post={post}
+                        closeEdit={() => setIsEditing(false)}
+                    />
+                ) : (
+                    post.body
+                )}
             </div>
 
             <div className={styles.footer}>
@@ -75,18 +83,33 @@ const PostCard = ({ post }) => {
                     <span>{ post.totalComments || 0 }</span>
                 </button>
 
-                {isOwner && (
-                    <button
-                        className={clsx(styles.actionButton, styles.deleteAction)}
-                        onClick={handleDelete}
-                    >
-                        <Trash size={18} />
-                        <span>Delete</span>
-                    </button>
+                {isOwner && !isEditing && (
+                    <>
+                        <button
+                            className={styles.actionButton}
+                            onClick={() => setIsEditing(true)}
+                        >
+                            <Pencil size={18} />
+                            <span>Edit</span>
+                        </button>
+
+                        <button
+                            className={`${styles.actionButton} ${styles.deleteAction}`}
+                            onClick={handleDelete}
+                        >
+                            <Trash size={18} />
+                            <span>Delete</span>
+                        </button>
+                    </>
                 )}
 
                 <span className={styles.date}>
                     { new Date(post.createdAt).toLocaleString() }
+                    {/* { post.createdAt !== post.updatedAt && (
+                        <span>
+                            (Edited)
+                        </span>
+                    ) } <-- likes count as updates so this doesnt work as intended :( */}
                 </span>
             </div>
         </div>

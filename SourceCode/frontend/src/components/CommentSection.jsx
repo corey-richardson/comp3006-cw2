@@ -30,11 +30,14 @@ const CommentSection = ({ postId }) => {
                 const response = await fetch(`${baseUrl}/posts/${postId}/comments`);
                 const json = await response.json();
 
-                if (response.ok) {
-                    setComments(json.comments);
+                if (!response.ok) {
+                    throw new Error(json.error || "Failed to fetch comments.");
                 }
+
+                setComments(json.comments);
+
             } catch (error) {
-                setError(error || "Failed to load comments.");
+                setError(error);
             }
         };
 

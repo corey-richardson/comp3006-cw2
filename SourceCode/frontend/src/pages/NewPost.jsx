@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Ban, Send, XCircle } from "lucide-react";
+import { Send, XCircle } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,7 @@ const NewPost = () => {
 
     return (
         <div className={styles.pageContainer}>
-            <form onSubmit={handleSubmit} className={clsx(styles.form, styles.wideForm)}>
+            <form onSubmit={handleSubmit} className={`${styles.form} ${styles.wideForm}`}>
                 <h3>Create a New Post</h3>
 
                 <div className={styles.inputWrapper}>
@@ -37,9 +37,10 @@ const NewPost = () => {
                         placeholder="Lorem Ipsum..."
                         onChange={(e) => { setBody(e.target.value); }}
                         value={ body }
-                        required
                         disabled={ isLoading }
                         maxLength={MAX_LENGTH}
+                        required
+                        autoFocus
                     ></textarea>
 
                     <div className={clsx(styles.counter, {
@@ -50,16 +51,9 @@ const NewPost = () => {
                     </div>
                 </div>
 
-                { error && (
-                    <p className="error">
-                        <Ban size={18} />
-                        { error || error.message }
-                    </p>
-                )}
-
                 <div className={styles.flexContainer}>
                     <button
-                        className={clsx(styles.formButton, styles.formCancelButton)}
+                        className={`${styles.formButton} ${styles.formCancelButton}`}
                         type="button"
                         onClick={() => navigate("/")}
                         disabled={isLoading}
@@ -81,6 +75,10 @@ const NewPost = () => {
                         )}
                     </button>
                 </div>
+
+                { error && (
+                    <p className="error">{ error.message || error }</p>
+                )}
 
                 <p className="small centred">Posting as: <strong>@{user.username}</strong></p>
             </form>

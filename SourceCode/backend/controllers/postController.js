@@ -223,10 +223,19 @@ const updatePost = async (request, response) => {
 
     const post = await Post.findOneAndUpdate(
         { _id: id, author_id },
-        { ...request.body }
-    );
+        { ...request.body },
+        { new: true }
+    ).populate("author_id", "username firstName lastName");
+
     if (!post) {
         return response.status(404).json({ error: "Post not found." });
+    }
+
+    const [ postWithMetrics ] = await addPostMetricsHelper([ post ]);
+
+    const io = request.app.get("socketio");
+    if (io) {
+        io.emit("updated_post", postWithMetrics);
     }
 
     response.status(200).json(post);
