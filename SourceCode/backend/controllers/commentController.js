@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { addPostMetricsHelper } = require("./postController");
+const { addPostMetricsHelper } = require("./utils");
 const Comment = require("../models/commentModel");
 const Post = require("../models/postModel");
 

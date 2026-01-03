@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+const { addPostMetricsHelper } = require("./utils");
 const Comment = require("../models/commentModel");
 const Post = require("../models/postModel");
 const Relationship = require("../models/relationshipModel");
@@ -7,34 +8,26 @@ const User = require("../models/userModel");
 
 const DEFAULT_LOAD_LIMIT = 10;
 
-const addPostMetricsHelper = async (posts) => {
-    return await Promise.all(posts.map(async (post) => {
-        const totalComments = await Comment.countDocuments({ post_id: post._id });
-        const totalLikes = post.likes ? post.likes.length : 0;
-        return {
-            ...post._doc,
-            totalComments,
-            totalLikes
-        };
-    }));
-};
-
 const getPost = async (request, response) => {
     const { id } = request.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return response.status(400).json({ error: "Invalid ID format." });
     }
 
-    const post = await Post
-        .findById(id)
-        .populate("author_id", "username firstName lastName");
-    if (!post) {
-        return response.status(404).json({ error: "Post not found." });
+    try {
+        const post = await Post
+            .findById(id)
+            .populate("author_id", "username firstName lastName");
+        if (!post) {
+            return response.status(404).json({ error: "Post not found." });
+        }
+
+        const [ postWithMetrics ] = await addPostMetricsHelper([ post ]);
+
+        response.status(200).json(postWithMetrics);
+    } catch (error) {
+        response.status(500).json({ error: error.message });
     }
-
-    const [ postWithMetrics ] = await addPostMetricsHelper([ post ]);
-
-    response.status(200).json(postWithMetrics);
 };
 
 const getPosts = async (request, response) => {
@@ -60,8 +53,8 @@ const getPosts = async (request, response) => {
             pages: Math.ceil(totalPosts / limit),
             hasMore: skip + posts.length < totalPosts
         });
-    } catch (e) {
-        response.status(500).json({ error: e.message });
+    } catch (error) {
+        response.status(500).json({ error: error.message });
     }
 };
 
@@ -287,7 +280,6 @@ const likePost = async (request, response) => {
 };
 
 module.exports = {
-    addPostMetricsHelper,
     getPosts, getPost, getUsersPosts, getFollowingPosts,
     createPost, deletePost, updatePost,
     likePost
