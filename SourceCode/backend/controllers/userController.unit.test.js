@@ -60,7 +60,7 @@ import {
     getUserByUsername
 } from "./userController";
 
-describe("userController", () => {
+describe("userController (Unit)", () => {
     let request, response;
 
     beforeEach(() => {

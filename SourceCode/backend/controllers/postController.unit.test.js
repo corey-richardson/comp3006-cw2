@@ -52,7 +52,7 @@ import {
     // deletePost,
     updatePost,
     // likePost
-} from "../controllers/postController";
+} from "./postController";
 
 describe("postController", () => {
     let request, response, mockSocket;
