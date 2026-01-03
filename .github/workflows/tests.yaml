@@ -1,11 +1,11 @@
-name: Tests (placeholder)
+name: Tests
 
 on:
-    workflow_dispatch
-    # push:
-    #     branches: [ main, master ]
-    # pull_request:
-    #     branches: [ main, master ]
+    workflow_dispatch:
+    push:
+        branches: [ main, master ]
+    pull_request:
+        branches: [ main, master ]
 
 jobs:
     test:
@@ -23,10 +23,19 @@ jobs:
               with:
                 node-version: "20"
                 cache: "npm"
-                cache-dependency-path: "./SourceCode/package-lock.json"
+                cache-dependency-path: "./SourceCode/**/package-lock.json"
 
-            - name: Placeholder
-              run: |
-                echo "No unit tests to run..."
-                echo "Working Dir: ${pwd}"
-                exit 0
+            - name: Install SourceCode Deps
+              run: npm ci
+
+            # - name: Install Frontend Deps
+            #   run: npm ci --prefix frontend
+
+            - name: Install Backend Deps
+              run: npm ci --prefix backend
+            
+            # - name: Run Vitest with Coverage Metrics (Frontend)
+            #   run: npm run test:coverage --prefix frontend
+
+            - name: Run Vitest with Coverage Metrics (Backend)
+              run: npm run test:coverage --prefix backend

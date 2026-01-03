@@ -1,11 +1,11 @@
 name: Lint
 
 on:
-    workflow_dispatch
-    # push:
-    #     branches: [ main, master ]
-    # pull_request:
-    #     branches: [ main, master ]
+    workflow_dispatch: 
+    push:
+        branches: [ main, master ]
+    pull_request:
+        branches: [ main, master ]
     
 jobs:
     lint:
@@ -26,13 +26,13 @@ jobs:
                 cache-dependency-path: "./SourceCode/package-lock.json"
 
             - name: Install SourceCode Deps
-              run: npm install
+              run: npm ci
 
             - name: Install Frontend Deps
-              run: npm install --prefix frontend
+              run: npm ci --prefix frontend
 
             - name: Install Backend Deps
-              run: npm install --prefix backend
+              run: npm ci --prefix backend
 
             - name: Run Lint
               run: npm run lint
