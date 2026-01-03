@@ -5,7 +5,7 @@ import Comment from "../models/commentModel";
 
 const POST_ID = "123456789012345678901234";
 
-vi.mock("../models/CommentModel", () => ({
+vi.mock("../models/commentModel", () => ({
     default: {
         countDocuments: vi.fn()
     }
