@@ -1,5 +1,6 @@
-const addPostMetricsHelper = async (posts, CommentModel) => {
-    const Comment = CommentModel || require("../models/commentModel");
+import Comment from "../models/commentModel";
+
+export const addPostMetricsHelper = async (posts) => {
 
     return await Promise.all(posts.map(async (post) => {
         const totalComments = await Comment.countDocuments({ post_id: post._id });
@@ -11,8 +12,4 @@ const addPostMetricsHelper = async (posts, CommentModel) => {
             totalLikes
         };
     }));
-};
-
-module.exports = {
-    addPostMetricsHelper
 };

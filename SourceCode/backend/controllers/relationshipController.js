@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const Relationship = require("../models/relationshipModel");
-const User = require("../models/userModel");
+import Relationship from "../models/relationshipModel";
+import User from "../models/userModel";
 
-const followUser = async (request, response) => {
+export const followUser = async (request, response) => {
     const { targetUserId } = request.params;
     const follower_id = request.user._id;
 
@@ -46,7 +46,7 @@ const followUser = async (request, response) => {
     }
 };
 
-const unfollowUser = async (request, response) => {
+export const unfollowUser = async (request, response) => {
     const { targetUserId } = request.params;
     const follower_id = request.user._id;
 
@@ -89,7 +89,7 @@ const unfollowUser = async (request, response) => {
     }
 };
 
-const getFollowing = async (request, response) => {
+export const getFollowing = async (request, response) => {
     const { username } = request.params;
 
     try {
@@ -106,7 +106,7 @@ const getFollowing = async (request, response) => {
     }
 };
 
-const getFollowers = async (request, response) => {
+export const getFollowers = async (request, response) => {
     const { username } = request.params;
 
     try {
@@ -122,5 +122,3 @@ const getFollowers = async (request, response) => {
         response.status(500).json({ error: e.message });
     }
 };
-
-module.exports = { followUser, unfollowUser, getFollowing, getFollowers };

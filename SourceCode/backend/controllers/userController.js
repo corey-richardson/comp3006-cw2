@@ -1,18 +1,18 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-const validator = require("validator");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import validator from "validator";
 
-const Comment = require("../models/commentModel");
-const Post = require("../models/postModel");
-const Relationship = require("../models/relationshipModel");
-const User = require("../models/userModel");
+import Comment from "../models/commentModel";
+import Post from "../models/postModel";
+import Relationship from "../models/relationshipModel";
+import User from "../models/userModel";
 
 const createJwt = (_id) => {
     return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
-const signupUser = async (request, response) => {
+export const signupUser = async (request, response) => {
     const { username, email, password, firstName, lastName } = request.body;
 
     try {
@@ -52,7 +52,7 @@ const signupUser = async (request, response) => {
     }
 };
 
-const loginUser = async (request, response) => {
+export const loginUser = async (request, response) => {
     const { email, password } = request.body;
 
     try {
@@ -79,7 +79,7 @@ const loginUser = async (request, response) => {
     }
 };
 
-const deleteUser = async (request, response) => {
+export const deleteUser = async (request, response) => {
     // Delete User -> Posts/Comments CASCADE
     // Transaction?
     const userId = request.user._id;
@@ -111,7 +111,7 @@ const deleteUser = async (request, response) => {
     }
 };
 
-const getUserById = async (request, response) => {
+export const getUserById = async (request, response) => {
     const { id } = request.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -141,7 +141,7 @@ const getUserById = async (request, response) => {
     }
 };
 
-const getUserByUsername = async (request, response) => {
+export const getUserByUsername = async (request, response) => {
     const { username } = request.params;
 
     try {
@@ -167,5 +167,3 @@ const getUserByUsername = async (request, response) => {
         response.status(500).json({ error: e.message });
     }
 };
-
-module.exports = { loginUser, signupUser, deleteUser, getUserById, getUserByUsername };

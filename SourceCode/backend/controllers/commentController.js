@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const { addPostMetricsHelper } = require("./utils");
-const Comment = require("../models/commentModel");
-const Post = require("../models/postModel");
+import { addPostMetricsHelper } from "./utils";
+import Comment from "../models/commentModel";
+import Post from "../models/postModel";
 
-const getComments = async (request, response) => {
+export const getComments = async (request, response) => {
     const { postId } = request.params;
     if (!mongoose.Types.ObjectId.isValid(postId)) {
         return response.status(400).json({ error: "Invalid Post ID format." });
@@ -25,7 +25,7 @@ const getComments = async (request, response) => {
     response.status(200).json({ comments, totalComments });
 };
 
-const createComment = async (request, response) => {
+export const createComment = async (request, response) => {
     const { post_id, body } = request.body;
     const author_id = request.user._id;
 
@@ -56,7 +56,7 @@ const createComment = async (request, response) => {
     }
 };
 
-const deleteComment = async (request, response) => {
+export const deleteComment = async (request, response) => {
     const { commentId } = request.params;
     const userId = request.user._id;
 
@@ -83,7 +83,7 @@ const deleteComment = async (request, response) => {
     response.status(200).json(comment);
 };
 
-const updateComment = async (request, response) => {
+export const updateComment = async (request, response) => {
     const { commentId } = request.params;
     const userId = request.user._id;
 
@@ -102,5 +102,3 @@ const updateComment = async (request, response) => {
 
     response.status(200).json(comment);
 };
-
-module.exports = { getComments, createComment, deleteComment, updateComment };

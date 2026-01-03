@@ -1,10 +1,7 @@
-const express = require("express");
+import express from "express";
 
-const {
-    followUser,
-    unfollowUser,
-} = require("../controllers/relationshipController");
-const requireAuth = require("../middleware/requireAuth");
+import { followUser, unfollowUser }  from "../controllers/relationshipController";
+import requireAuth from "../middleware/requireAuth";
 
 const router = express.Router();
 
@@ -17,4 +14,4 @@ router.use(requireAuth);
 router.post("/:targetUserId", followUser);
 router.delete("/:targetUserId", unfollowUser);
 
-module.exports = router;
+export default router;

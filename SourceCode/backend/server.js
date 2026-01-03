@@ -1,16 +1,17 @@
-require("dotenv").config();
+import "dotenv/config";
 
-const http = require("http");
+import http from "http";
 
-const cors = require("cors");
-const express = require("express");
-const mongoose = require("mongoose");
-const { Server } = require("socket.io");
+import cors from "cors";
+import express from "express";
+import mongoose from "mongoose";
 
-const commentRoutes = require("./routes/comments");
-const postRoutes = require("./routes/posts");
-const relationshipRoutes = require("./routes/relationships");
-const userRoutes = require("./routes/users");
+import { Server } from "socket.io";
+
+import commentRoutes from "./routes/comments";
+import postRoutes from "./routes/posts";
+import relationshipRoutes from "./routes/relationships";
+import userRoutes from "./routes/users";
 
 // Express App
 const app = express();

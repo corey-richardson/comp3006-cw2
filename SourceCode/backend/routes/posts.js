@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
 
-const {
+import {
     getPosts,
     getPost,
     getUsersPosts,
@@ -9,8 +9,9 @@ const {
     deletePost,
     updatePost,
     likePost
-} = require("../controllers/postController");
-const requireAuth = require("../middleware/requireAuth");
+} from "../controllers/postController";
+
+import requireAuth from "../middleware/requireAuth";
 
 const router = express.Router();
 
@@ -28,4 +29,4 @@ router.delete("/post/:id", deletePost);
 router.patch("/post/:id", updatePost);
 router.patch("/post/:id/like", likePost);
 
-module.exports = router;
+export default router;

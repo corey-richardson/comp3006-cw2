@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { addPostMetricsHelper } = require("./utils");
+import { addPostMetricsHelper } from "./utils";
 
 const POST_ID = "123456789012345678901234";
 const mockModelDI = { countDocuments: vi.fn() };

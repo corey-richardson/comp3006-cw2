@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const { addPostMetricsHelper } = require("./utils");
-const Comment = require("../models/commentModel");
-const Post = require("../models/postModel");
-const Relationship = require("../models/relationshipModel");
-const User = require("../models/userModel");
+import { addPostMetricsHelper } from "./utils";
+import Comment from "../models/commentModel";
+import Post from "../models/postModel";
+import Relationship from "../models/relationshipModel";
+import User from "../models/userModel";
 
 const DEFAULT_LOAD_LIMIT = 10;
 
-const getPost = async (request, response) => {
+export const getPost = async (request, response) => {
     const { id } = request.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return response.status(400).json({ error: "Invalid ID format." });
@@ -30,7 +30,7 @@ const getPost = async (request, response) => {
     }
 };
 
-const getPosts = async (request, response) => {
+export const getPosts = async (request, response) => {
     const page = parseInt(request.query.page) || 1;
     const limit = parseInt(request.query.limit) || DEFAULT_LOAD_LIMIT;
     const skip = (page - 1) * limit;
@@ -58,7 +58,7 @@ const getPosts = async (request, response) => {
     }
 };
 
-const getUsersPosts = async (request, response) => {
+export const getUsersPosts = async (request, response) => {
     const { username } = request.params;
 
     const page = parseInt(request.query.page) || 1;
@@ -102,7 +102,7 @@ const getUsersPosts = async (request, response) => {
     }
 };
 
-const getFollowingPosts = async (request, response) => {
+export const getFollowingPosts = async (request, response) => {
     const page = parseInt(request.query.page) || 1;
     const limit = parseInt(request.query.limit) || DEFAULT_LOAD_LIMIT;
     const skip = (page - 1) * limit;
@@ -139,7 +139,7 @@ const getFollowingPosts = async (request, response) => {
     }
 };
 
-const createPost = async (request, response) => {
+export const createPost = async (request, response) => {
     const { body } = request.body;
     const author_id = request.user._id;
 
@@ -167,7 +167,7 @@ const createPost = async (request, response) => {
     }
 };
 
-const deletePost = async (request, response) => {
+export const deletePost = async (request, response) => {
     const { id } = request.params;
     const author_id = request.user._id;
 
@@ -206,7 +206,7 @@ const deletePost = async (request, response) => {
     }
 };
 
-const updatePost = async (request, response) => {
+export const updatePost = async (request, response) => {
     const { id } = request.params;
     const author_id = request.user._id;
 
@@ -234,7 +234,7 @@ const updatePost = async (request, response) => {
     response.status(200).json(post);
 };
 
-const likePost = async (request, response) => {
+export const likePost = async (request, response) => {
     const { id } = request.params;
     const userId = request.user._id;
 
@@ -277,10 +277,4 @@ const likePost = async (request, response) => {
     } catch (e) {
         response.status(500).json({ error: e.message });
     }
-};
-
-module.exports = {
-    getPosts, getPost, getUsersPosts, getFollowingPosts,
-    createPost, deletePost, updatePost,
-    likePost
 };

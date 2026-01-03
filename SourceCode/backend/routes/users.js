@@ -1,17 +1,16 @@
-const express = require("express");
+import express from "express";
 
-const {
-    getFollowing,
-    getFollowers
-} = require("../controllers/relationshipController");
-const {
+import { getFollowing, getFollowers } from "../controllers/relationshipController";
+
+import {
     loginUser,
     signupUser,
     deleteUser,
     getUserById,
     getUserByUsername,
-} = require("../controllers/userController");
-const requireAuth = require("../middleware/requireAuth");
+}  from "../controllers/userController";
+
+import requireAuth from "../middleware/requireAuth";
 
 const router = express.Router();
 
@@ -30,4 +29,4 @@ router.use(requireAuth);
 // PROTECTED ROUTES
 router.delete("/:id", deleteUser);
 
-module.exports = router;
+export default router;
