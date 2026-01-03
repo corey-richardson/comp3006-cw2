@@ -24,7 +24,7 @@ const Feed = () => {
         if (authIsReady) {
             const previouslySelectedFeed = localStorage.getItem("previouslySelectedFeed");
 
-            if (previouslySelectedFeed) {
+            if (user?.token && previouslySelectedFeed) {
                 setFeedType(previouslySelectedFeed);
             } else {
                 setFeedType(user?.token ? "following" : "global");
