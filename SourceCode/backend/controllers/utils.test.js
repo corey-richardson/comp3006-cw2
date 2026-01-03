@@ -1,9 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 import { addPostMetricsHelper } from "./utils";
+import Comment from "../models/commentModel";
 
 const POST_ID = "123456789012345678901234";
 const mockModelDI = { countDocuments: vi.fn() };
+
+vi.mock("../models/CommentModel", () => ({
+    default: {
+        countDocuments: vi.fn()
+    }
+}));
 
 describe("addPostMetricsHelper", () => {
     beforeEach(() => {
@@ -12,7 +19,7 @@ describe("addPostMetricsHelper", () => {
 
     it("Should add totalComments and totalLikes to Post objects", async () => {
         // Arrange
-        mockModelDI.countDocuments.mockResolvedValue(5);
+        Comment.countDocuments.mockResolvedValue(5);
 
         const mockPost = [ {
             _id: POST_ID,
@@ -23,18 +30,18 @@ describe("addPostMetricsHelper", () => {
         } ];
 
         // Act
-        const result = await addPostMetricsHelper(mockPost, mockModelDI);
+        const result = await addPostMetricsHelper(mockPost);
 
         // Assert
         expect(result[0]).toHaveProperty("totalComments", 5);
         expect(result[0]).toHaveProperty("totalLikes", 2);
         expect(result[0].body).toBe("1273, Down to Rockefeller Street");
-        expect(mockModelDI.countDocuments).toHaveBeenCalledWith({ post_id: POST_ID });
+        expect(Comment.countDocuments).toHaveBeenCalledWith({ post_id: POST_ID });
     });
 
     it ("Should handle an empty likes array", async () => {
         // Arrange
-        mockModelDI.countDocuments.mockResolvedValue(0);
+        Comment.countDocuments.mockResolvedValue(0);
 
         const mockPost = [ {
             _id: POST_ID,
@@ -45,7 +52,7 @@ describe("addPostMetricsHelper", () => {
         } ];
 
         // Act
-        const result = await addPostMetricsHelper(mockPost, mockModelDI);
+        const result = await addPostMetricsHelper(mockPost);
 
         // Assert
         expect(result[0]).toHaveProperty("totalComments", 0);
@@ -54,7 +61,7 @@ describe("addPostMetricsHelper", () => {
 
     it ("Should handle a null likes array", async () => {
         // Arrange
-        mockModelDI.countDocuments.mockResolvedValue(0);
+        Comment.countDocuments.mockResolvedValue(0);
 
         const mockPost = [ {
             _id: POST_ID,
@@ -65,7 +72,7 @@ describe("addPostMetricsHelper", () => {
         } ];
 
         // Act
-        const result = await addPostMetricsHelper(mockPost, mockModelDI);
+        const result = await addPostMetricsHelper(mockPost);
 
         // Assert
         expect(result[0]).toHaveProperty("totalComments", 0);
@@ -74,15 +81,15 @@ describe("addPostMetricsHelper", () => {
 
     it ("Should handle empty input", async () => {
         // Arrange and Act
-        const result = await addPostMetricsHelper([], mockModelDI);
+        const result = await addPostMetricsHelper([]);
         // Assert
         expect(result).toEqual([]);
-        expect(mockModelDI.countDocuments).not.toHaveBeenCalled();
+        expect(Comment.countDocuments).not.toHaveBeenCalled();
     });
 
     it ("Should handle multiple posts", async () => {
         // Arrange
-        mockModelDI.countDocuments
+        Comment.countDocuments
             .mockResolvedValueOnce(1)
             .mockResolvedValueOnce(2)
             .mockResolvedValueOnce(3);
@@ -94,7 +101,7 @@ describe("addPostMetricsHelper", () => {
         ];
 
         // Act
-        const result = await addPostMetricsHelper(mockPosts, mockModelDI);
+        const result = await addPostMetricsHelper(mockPosts);
 
         // Assert
         expect(result[0]).toHaveProperty("totalComments", 1);
@@ -104,6 +111,6 @@ describe("addPostMetricsHelper", () => {
         expect(result[2]).toHaveProperty("totalComments", 3);
         expect(result[2]).toHaveProperty("totalLikes", 3);
 
-        expect(mockModelDI.countDocuments).toHaveBeenCalledTimes(3);
+        expect(Comment.countDocuments).toHaveBeenCalledTimes(3);
     });
 });
