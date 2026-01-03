@@ -6,7 +6,6 @@ import {
     deleteComment,
     updateComment,
 } from "../controllers/commentController";
-
 import requireAuth from "../middleware/requireAuth";
 
 // Need to inherit :postId from parent router ("/api/posts/:postId/comments")

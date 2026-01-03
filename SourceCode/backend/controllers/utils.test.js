@@ -4,7 +4,6 @@ import { addPostMetricsHelper } from "./utils";
 import Comment from "../models/commentModel";
 
 const POST_ID = "123456789012345678901234";
-const mockModelDI = { countDocuments: vi.fn() };
 
 vi.mock("../models/CommentModel", () => ({
     default: {
@@ -114,3 +113,4 @@ describe("addPostMetricsHelper", () => {
         expect(Comment.countDocuments).toHaveBeenCalledTimes(3);
     });
 });
+

@@ -1,7 +1,6 @@
 import express from "express";
 
 import { getFollowing, getFollowers } from "../controllers/relationshipController";
-
 import {
     loginUser,
     signupUser,
@@ -9,7 +8,6 @@ import {
     getUserById,
     getUserByUsername,
 }  from "../controllers/userController";
-
 import requireAuth from "../middleware/requireAuth";
 
 const router = express.Router();

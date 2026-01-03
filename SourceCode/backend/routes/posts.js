@@ -10,7 +10,6 @@ import {
     updatePost,
     likePost
 } from "../controllers/postController";
-
 import requireAuth from "../middleware/requireAuth";
 
 const router = express.Router();

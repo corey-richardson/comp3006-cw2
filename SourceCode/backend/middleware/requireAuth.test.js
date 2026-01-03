@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import jwt from "jsonwebtoken";
-import User from "../models/userModel";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
 import requireAuth from "./requireAuth";
+import User from "../models/userModel";
 
 vi.mock("jsonwebtoken", () => ({
     default: {
@@ -41,7 +42,7 @@ describe("requireAuth Middleware", () => {
 
     it ("Rejects if token is invalid or expired", async () => {
         request.headers.authorization = "Bearer bad_token";
-        jwt.verify.mockImplementation(() => { throw new Error("Invalid token.")});
+        jwt.verify.mockImplementation(() => { throw new Error("Invalid token.");});
 
         await requireAuth(request, response, next);
 
@@ -53,7 +54,7 @@ describe("requireAuth Middleware", () => {
     it ("Rejects if user doesn't exist in database", async () => {
         request.headers.authorization = "Bearer good_token";
         jwt.verify.mockReturnValue({ _id: "12345" }); // JWT has _id prop
-        
+
         User.findById.mockReturnValue({
             select: vi.fn().mockResolvedValue(null)
         }); // But User._id not found in db
@@ -67,7 +68,7 @@ describe("requireAuth Middleware", () => {
 
     it ("Accepts if token is valid and user exists in db", async () => {
         request.headers.authorization = "Bearer good_token";
-        jwt.verify.mockReturnValue({ _id: "12345" })
+        jwt.verify.mockReturnValue({ _id: "12345" });
 
         User.findById.mockReturnValue({
             select: vi.fn().mockResolvedValue({ _id: "12345" })
