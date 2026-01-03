@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { addPostMetricsHelper } from "./utils";
 import Comment from "../models/commentModel";
 
-
 const POST_ID = "123456789012345678901234";
 
 vi.mock("../models/CommentModel", () => ({

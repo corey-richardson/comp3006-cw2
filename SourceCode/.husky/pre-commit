@@ -1,2 +1,4 @@
+#!/usr/bin/env sh
+
+cd SourceCode
 npx lint-staged
-npm test
