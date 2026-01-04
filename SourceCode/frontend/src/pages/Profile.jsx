@@ -30,6 +30,8 @@ const Profile = () => {
             setIsLoading(true);
             setError(null);
 
+            dispatch({ type: "SET_FEEDTYPE", payload: { type: "profile", username: username } });
+
             try {
                 const user = await fetch(`${baseUrl}/users/username/${username}`);
                 if (!user.ok) throw new Error("User not found.");

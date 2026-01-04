@@ -2,6 +2,7 @@ import { createContext, useReducer, useEffect, useCallback } from "react";
 import { io } from "socket.io-client";
 
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useRelationship } from "../hooks/useRelationshipContext";
 
 export const PostContext = createContext();
 
@@ -24,13 +25,26 @@ export const postReducer = (state, action) => {
             };
 
         case "ADD_POST":
-            return state.posts.some(post => post._id === action.payload._id)
-                ? state
-                : {
-                    ...state,
-                    posts: [ action.payload, ...state.posts ],
-                    totalPosts: (state.totalPosts || 0) + 1,
-                };
+        {
+            const { feedtype } = state;
+            const { isFollowingAuthor } = action.payload;
+
+            const isGlobal = feedtype.type === "global";
+            const isFollowing = feedtype.type === "following" && isFollowingAuthor;
+            const isProfileMatch = feedtype.type === "profile" && feedtype?.username === action.payload.author_id.username;
+
+            if (isGlobal || isFollowing || isProfileMatch) {
+                return state.posts.some(post => post._id === action.payload._id)
+                    ? state
+                    : {
+                        ...state,
+                        posts: [ action.payload, ...state.posts ],
+                        totalPosts: (state.totalPosts || 0) + 1,
+                    };
+            }
+
+            return state; // do nothing
+        }
 
         case "UPDATE_POST":
         {
@@ -57,14 +71,21 @@ export const postReducer = (state, action) => {
         case "CLEAR_POSTS":
             return { posts: [], hasMore: false };
 
+        case "SET_FEEDTYPE":
+            return {
+                ...state,
+                feedtype: action.payload
+            };
+
         default:
             return state;
     }
 };
 
 export const PostContextProvider = ({ children }) => {
-    const [ state, dispatch ] = useReducer(postReducer, { posts: [], hasMore: false });
+    const [ state, dispatch ] = useReducer(postReducer, { posts: [], hasMore: false, feedtype: { type: "global", username: null } });
     const { user } = useAuthContext();
+    const { following } = useRelationship();
 
     const socketUrl = process.env.REACT_APP_BASE_URL || "/";
     const baseUrl = process.env.REACT_APP_API_BASE_URL || "/api";
@@ -155,7 +176,8 @@ export const PostContextProvider = ({ children }) => {
         });
 
         socket.on("new_post", (newPost) => {
-            dispatch({ type: "ADD_POST", payload: newPost });
+            const isFollowingAuthor = following.includes(String(newPost.author_id._id));
+            dispatch({ type: "ADD_POST", payload: { ...newPost, isFollowingAuthor } });
         });
 
         socket.on("updated_post", (updatedPost) => {
@@ -167,7 +189,7 @@ export const PostContextProvider = ({ children }) => {
         });
 
         return () => socket.disconnect();
-    }, [ user, socketUrl ]);
+    }, [ user, socketUrl, following ]);
 
     return (
         <PostContext.Provider value={{ ...state, dispatch, deletePost, fetchPage, toggleLike }}>

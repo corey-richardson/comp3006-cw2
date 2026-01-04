@@ -26,8 +26,10 @@ const Feed = () => {
 
             if (user?.token && previouslySelectedFeed) {
                 setFeedType(previouslySelectedFeed);
+                dispatch({ type: "SET_FEEDTYPE", payload: { type: feedType } });
             } else {
                 setFeedType(user?.token ? "following" : "global");
+                dispatch({ type: "SET_FEEDTYPE", payload: { type: feedType } });
             }
         }
     }, [ authIsReady, user, dispatch ]);
@@ -45,6 +47,7 @@ const Feed = () => {
 
     const handleFeedChange = (type) => {
         dispatch({ type: "CLEAR_POSTS" });
+        dispatch({ type: "SET_FEEDTYPE", payload: { type: type } });
         setFeedType(type);
         localStorage.setItem("previouslySelectedFeed", type);
     };
