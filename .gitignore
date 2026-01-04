@@ -175,3 +175,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Temp Files
+~*
+
+# Images
+*.png
+*.jp*g
