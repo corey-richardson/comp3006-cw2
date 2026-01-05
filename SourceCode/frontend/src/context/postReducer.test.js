@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 
-import { postReducer } from "./PostContext";
+import postReducer from "./postReducer";
 
 describe("postReducer ADD_POST", () => {
     const initialState = {
@@ -73,6 +73,26 @@ describe("postReducer ADD_POST", () => {
         // Assert
         expect(state.posts).toHaveLength(0);
     });
+
+    it ("Doesn't add duplicate post to state", () => {
+        // Arrange
+        const existingPost = { _id: "1234", author_id: { username: "fafyl" } };
+        const initialState = {
+            posts: [ existingPost ],
+            totalPosts: 1,
+            feedtype: { type: "global" }
+        };
+        const action = {
+            type: "ADD_POST",
+            payload: { ...existingPost, isFollowingAuthor: false }
+        };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState.posts).toHaveLength(1);
+        expect(newState.totalPosts).toBe(1);
+        expect(newState).toBe(initialState);
+    });
 });
 
 describe("postReducer SET_POST / LOAD_MORE_POSTS Pagination", () => {
@@ -117,5 +137,130 @@ describe("postReducer SET_POST / LOAD_MORE_POSTS Pagination", () => {
         expect(newState.posts[0]._id).toBe("old-123");
         expect(newState.posts[1]._id).toBe("new-123");
         expect(newState.hasMore).toBe(false);
+    });
+});
+
+describe("postReducer UPDATE_POST", () => {
+    const initialState = {
+        posts: [
+            { _id: "1", body: "Original Content", likes: 0 },
+            { _id: "2", body: "Also Original Content", likes: 5 }
+        ]
+    };
+
+    it ("Updates a post existing in state with no side effects on other posts", () => {
+        // Arrange
+        const updatedPost = { _id: "2", body: "Updated Content", likes: 42 };
+        const action = { type: "UPDATE_POST", payload: updatedPost };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState.posts).toHaveLength(2);
+        expect(newState.posts[0].body).toBe("Original Content");
+        expect(newState.posts[1].body).toBe("Updated Content");
+        expect(newState.posts[1].likes).toBe(42);
+    });
+
+    it ("Should return existing state if post doesn't exist", () => {
+        // Arrange
+        const newPost = { _id: "3", body: "I'm not in state", likes: 666 };
+        const action = { type: "UPDATE_POST", payload: newPost };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState.posts).toHaveLength(2);
+    });
+});
+
+describe("postReducer REMOVE_POST", () => {
+    const initialState = {
+        posts: [
+            { _id: "1", body: "Keep me" },
+            { _id: "2", body: "Delete me" }
+        ],
+        totalPosts: 2
+    };
+
+    it ("Removes a specified post and decrements totalPosts", () => {
+        // Arrange
+        const action = { type: "REMOVE_POST", payload: "2" };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState.posts).toHaveLength(1);
+        expect(newState.totalPosts).toBe(1);
+        expect(newState.posts[0]._id).toBe("1");
+    });
+
+    it ("Has no effect if a specified post doesn't exist in state", () => {
+        // Arrange
+        const action = { type: "REMOVE_POST", payload: "666" };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState.posts).toHaveLength(2);
+        expect(newState.totalPosts).toBe(2);
+    });
+
+    it ("Shouldn't decrement totalPosts below 0", () => {
+        // Arrange
+        const impossibleEmptyState = { posts: [ { _id: "1" } ], totalPosts: 0 };
+        const emptyState = { posts: [], totalPosts: 0 };
+        const action = { type: "REMOVE_POST", payload: "1" };
+        // Act and Assert
+        const newStateImpossible = postReducer(impossibleEmptyState, action);
+        expect(newStateImpossible.totalPosts).toBe(0);
+        // Act and Assert
+        const newStateEmpty = postReducer(emptyState, action);
+        expect(newStateEmpty.totalPosts).toBe(0);
+    });
+});
+
+describe("postReducer CLEAR_POSTS", () => {
+    it ("Should clear state to an empty posts list and 0 total posts", () => {
+        // Arrange
+        const stateToClear = {
+            posts: [
+                { _id: "1", body: "Keep me" },
+                { _id: "2", body: "Delete me" }
+            ],
+            totalPosts: 2,
+            hasMore: true,
+            feedtype: { type: "following" }
+        };
+        const action = { type: "CLEAR_POSTS" };
+        // Act
+        const newState = postReducer(stateToClear, action);
+        // Assert
+        expect(newState.posts).toHaveLength(0);
+        expect(newState.hasMore).toBe(false);
+        expect(newState.totalPosts).toBe(0);
+        expect(newState.feedtype.type).toBe("global");
+    });
+});
+
+describe("postReducer SET_FEEDTYPE", () => {
+    it ("Updates the feedtype", () => {
+        // Arrange
+        const initialState = { posts: [], feedtype: { type: "global" } };
+        const newFeedtype = { type: "profile", username: "eyes-like-the-sky" };
+        const action = { type: "SET_FEEDTYPE", payload: newFeedtype };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState.feedtype.type).toBe("profile");
+        expect(newState.feedtype.username).toBe("eyes-like-the-sky");
+    });
+});
+
+describe("postReducer default case", () => {
+    it ("Should return original state if action type isn't valid", () => {
+        // Arrange
+        const initialState = { posts: [ { _id: "1", body: "No change please." } ] };
+        const action = { type: "NOT_A_VALID_ACTION" };
+        // Act
+        const newState = postReducer(initialState, action);
+        // Assert
+        expect(newState).toBe(initialState);
     });
 });
