@@ -32,7 +32,7 @@ const Feed = () => {
                 dispatch({ type: "SET_FEEDTYPE", payload: { type: feedType } });
             }
         }
-    }, [ authIsReady, user, dispatch ]);
+    }, [ authIsReady, feedType, user, dispatch ]);
 
     useEffect(() => {
         setPage(1);
